@@ -1,29 +1,34 @@
 import { Injectable } from '@angular/core';
+
 import {AngularFireAuth} from '@angular/fire/auth';
-import {map} from 'rxjs/operators';
-import {AngularFireDatabase} from '@angular/fire/database';
 import {auth} from 'firebase';
+
+// importamos el servicio de acceso a la BD
+import {FireDBService} from './fire-db.service';
+import {AngularFireDatabase} from '@angular/fire/database';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ServAuthService {
-
-  email = '';
-  pass = '';
+  // objeto local para los datos del usuario
   authUser = null;
 
-  constructor(public  miauth: AngularFireAuth) { }
+  constructor(public miAuth: AngularFireAuth,
+              public miDB: FireDBService) {
+  }
 
-  user = this.miauth.authState;
+  user = this.miAuth.authState;
 
   // logueo con cuenta de google
   glogin() {
     console.log('google login!');
-    this.miauth.signInWithPopup( new auth.GoogleAuthProvider() )
+    this.miAuth.signInWithPopup( new auth.GoogleAuthProvider() )
       .then( user => {
         console.log('user logado: ', user);
         this.authUser = user.user;
+        // actualizamos la base de datos
+        this.miDB.altausuario(user.user.uid, user.user.email);
       })
       .catch( error => {
         console.log('error en google login: ', error);
@@ -31,6 +36,6 @@ export class ServAuthService {
   }
   logout() {
     console.log('logout!');
-    this.miauth.signOut();
+    this.miAuth.signOut();
   }
 }
