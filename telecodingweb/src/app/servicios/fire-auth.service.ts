@@ -10,7 +10,7 @@ import {AngularFireDatabase} from '@angular/fire/database';
 @Injectable({
   providedIn: 'root'
 })
-export class ServAuthService {
+export class FireAuthService {
   // objeto local para los datos del usuario
   authUser = null;
 

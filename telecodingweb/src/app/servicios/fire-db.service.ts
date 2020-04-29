@@ -1,16 +1,34 @@
 import { Injectable } from '@angular/core';
-import {AngularFireDatabase} from '@angular/fire/database';
+// las clases para trabajar con bases de datos
+import { AngularFireDatabase, AngularFireList, AngularFireObject } from '@angular/fire/database';
+
+// la interface para guardar los datos
+import { Wbs } from '../interfaces/wbs';
 
 @Injectable({
   providedIn: 'root'
 })
+
 export class FireDBService {
+
+  // Usamos el Servicio 'AngularFireList' de Angular Fire para listar los datos
+  wbsRef: AngularFireList<any>;
 
   /**
    * Constructor de la clase
    * @param db objeto para manejar datos en la Database RealTime
    */
   constructor(public db: AngularFireDatabase) { }
+
+  /**
+   * especificamos la colección de datos de Firebase Database Realtime
+   * que queremos listar 'workbenchs'
+   * @return todos los workbenchs de la db
+   */
+  listarWbs() {
+    this.wbsRef = this.db.list('workbenchs');
+    return this.wbsRef;
+  }
 
   /**
    * Crea entrada según la uid del usuario
@@ -28,17 +46,5 @@ export class FireDBService {
   bajausuario(uidBorrar: string) {
     // borra entrada
     this.db.object('users/' + uidBorrar).remove();
-  }
-
-  /**
-   * recorre todos los workbenchs
-   */
-  getWorkbenchs() {
-
-    // tslint:disable-next-line:only-arrow-functions
-    this.db.database.ref('/workbenchs').once('value').then(function(snapshot) {
-      console.log(snapshot.val());
-      return (snapshot.val()) || 'Anything';
-    });
   }
 }

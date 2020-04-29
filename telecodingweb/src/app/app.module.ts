@@ -6,7 +6,6 @@ import { AppComponent } from './app.component';
 
 // importamos lo necesario para acceder a firebase
 import { AngularFireModule } from '@angular/fire';
-import { AngularFireAuthModule } from '@angular/fire/auth';
 import { AngularFireDatabaseModule} from '@angular/fire/database';
 
 // valores de acceso a firebase
