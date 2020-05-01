@@ -1,25 +1,54 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 
+// componentes
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { GridwbComponent } from './gridwb/gridwb.component';
 
 // importamos lo necesario para acceder a firebase
 import { AngularFireModule } from '@angular/fire';
 import { AngularFireDatabaseModule} from '@angular/fire/database';
+import { environment } from '../environments/environment';
 
-// valores de acceso a firebase
-import {environment} from '../environments/environment';
+// css
+import { MatCardModule } from '@angular/material/card';
+import { MatGridListModule } from '@angular/material/grid-list';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MatSliderModule } from '@angular/material/slider';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatListModule } from '@angular/material/list';
+import { LayoutModule } from '@angular/cdk/layout';
+import { MatButtonModule } from '@angular/material/button';
+import { MatMenuModule } from '@angular/material/menu';
+import { FlexLayoutModule} from '@angular/flex-layout';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    GridwbComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     AngularFireModule.initializeApp(environment.firebaseConfig),
-    AngularFireDatabaseModule
+    AngularFireDatabaseModule,
+    MatGridListModule,
+    MatCardModule,
+    MatIconModule,
+    MatButtonToggleModule,
+    BrowserAnimationsModule,
+    MatSliderModule,
+    MatToolbarModule,
+    MatSidenavModule,
+    MatListModule,
+    LayoutModule,
+    MatButtonModule,
+    MatMenuModule,
+    FlexLayoutModule
   ],
   providers: [],
   bootstrap: [AppComponent]

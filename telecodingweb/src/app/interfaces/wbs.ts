@@ -10,5 +10,7 @@ export interface Wbs {
   't_total' : number,
   't_remaining' : number,
   'userLogueado' : string,
-  'userNodeRED' : string
+  'userNodeRED' : string,
+  'avatar' : string,
+  'components': string
 }

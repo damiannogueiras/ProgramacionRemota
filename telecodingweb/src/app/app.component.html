@@ -1,82 +1,44 @@
-<!-- Cabecera -->
-<div class="toolbar" role="banner">
-  <a class="link" target="_blank" href="http://www.danielcastelao.org" title="Castelao">
-    <svg height="24" data-name="Logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1390 1010">
-      <rect width="400" height="400" fill="none"/>
-      <g id="layer101" fill="#6c757d" stroke="none">
-        <path
-          d="M103 918 c-46 -49 -63 -90 -63 -153 0 -67 20 -119 62 -162 l32 -33 465 0 465 0 -36 38 c-46 46 -68 98 -68 157 0 55 19 97 68 148 l36 37 -465 0 -465 0 -31 -32z"/>
-        <path
-          d="M362 403 c46 -47 68 -99 68 -158 0 -55 -19 -97 -68 -147 l-36 -38 465 0 465 0 31 32 c46 49 63 90 63 153 0 67 -20 119 -62 163 l-32 32 -465 0 -465 0 36 -37z"/>
-      </g>
-    </svg>
-  </a>
-  <h3><span>TeleCoding</span></h3>
-  <div class="spacer"></div>
-  <div class="loginDiv" *ngIf="( authApp.user | async) as obs; else login">Hola, {{obs.email}}
-    <button class="btn btn-secondary" (click)="authApp.logout()">Salir</button>
-  </div>
-  <ng-template #login>
-    <div class="loginDiv">
-      <button class="btn btn-danger" (click)="authApp.glogin()">
-        <i class="fab fa-google"></i>
-        Log in
-      </button>
-    </div>
+<div id="principal" class="telecoding-typography">
 
-  </ng-template>
+  <!-- Cabecera -->
+  <mat-toolbar  color="primary"  class="fix mat-elevation-z20">
+    <mat-toolbar-row>
+      <div class="col">
+          <a mat-button target="_blank" href="http://www.danielcastelao.org" title="Castelao">
+            <svg height="24" data-name="Logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1390 1010">
+              <rect width="400" height="400" fill="none"/>
+              <g id="layer101" fill="aliceblue" stroke="none">
+                <path
+                  d="M103 918 c-46 -49 -63 -90 -63 -153 0 -67 20 -119 62 -162 l32 -33 465 0 465 0 -36 38 c-46 46 -68 98 -68 157 0 55 19 97 68 148 l36 37 -465 0 -465 0 -31 -32z"/>
+                <path
+                  d="M362 403 c46 -47 68 -99 68 -158 0 -55 -19 -97 -68 -147 l-36 -38 465 0 465 0 31 32 c46 49 63 90 63 153 0 67 -20 119 -62 163 l-32 32 -465 0 -465 0 36 -37z"/>
+              </g>
+            </svg>
+          </a>
+          <span class="telecoding-typography" style="padding-left: 10px">TeleCoding</span>
+      </div>
+      <div class="col" style="text-align: right">
+          <div class="telecoding-typography" *ngIf="( authApp.user | async) as obs; else login">
+            Hola, {{obs.email}}
+            <button class="mat-raised-button telecoding-typography" (click)="authApp.logout()">Salir</button>
+          </div>
+          <ng-template #login>
+            <button  class="mat-raised-button telecoding-typography" (click)="authApp.glogin()">
+              <i class="fab fa-google"></i>Entrar</button>
+          </ng-template>
+      </div>
+    </mat-toolbar-row>
+  </mat-toolbar>
+
+  <!-- Workbenchs Grid -->
+  <app-gridwb></app-gridwb>
+
+  <!-- Footer -->
+  <footer class="mat-background-primary fix-footer">
+    ¿ Quieres colaborar o hacer tu propio TeleCoding ?&nbsp;
+    <a href="https://github.com/damiancastelao/ProgramacionRemota" target="_blank" rel="noopener"> Repo en Github</a>
+  </footer>
+
+  <router-outlet></router-outlet>
+
 </div>
-
-
-<div class="content" role="main">
-  <!-- Workbenchs -->
-  <h2 class="mat-card">Elige banco de trabajo</h2>
-
-  <table class="table table-bordered table-responsive-sm table-responsive-md table-responsive-lg">
-    <thead>
-    <tr>
-      <th scope="col">Id</th>
-      <th scope="col">Nombre</th>
-      <th scope="col">Precio</th>
-      <th scope="col">Stock</th>
-    </tr>
-    </thead>
-    <tbody>
-
-    <!-- Listamos los datos mediante la directiva ngFor -->
-    <tr *ngFor="let workbench of Workbenchs">
-      <th>{{workbench.URL}}</th>
-      <td>{{workbench.nombre}}</td>
-      <td>{{workbench.status}}</td>
-      <td>{{workbench.t_total}}</td>
-    </tr>
-
-    </tbody>
-  </table>
-</div>
-
-<!-- Footer -->
-<footer>
-  ¿ Quieres colaborar o hacer tu propio TeleCoding ?&nbsp;
-  <a href="https://github.com/damiancastelao/ProgramacionRemota" target="_blank" rel="noopener"> Repo en Github.
-    <div class="github-star-badge">
-      <svg class="material-icons" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-        <path d="M0 0h24v24H0z" fill="none"/>
-        <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
-      </svg>
-      Star
-    </div>
-  </a>
-</footer>
-<!-- Fondo -->
-<svg id="fondo" xmlns="http://www.w3.org/2000/svg" width="100%" viewBox="0 0 1390 1010">
-  <g fill="#f6f6f6" stroke="none">
-    <path
-      d="M103 918 c-46 -49 -63 -90 -63 -153 0 -67 20 -119 62 -162 l32 -33 465 0 465 0 -36 38 c-46 46 -68 98 -68 157 0 55 19 97 68 148 l36 37 -465 0 -465 0 -31 -32z"/>
-    <path
-      d="M362 403 c46 -47 68 -99 68 -158 0 -55 -19 -97 -68 -147 l-36 -38 465 0 465 0 31 32 c46 49 63 90 63 153 0 67 -20 119 -62 163 l-32 32 -465 0 -465 0 36 -37z"/>
-  </g>
-</svg>
-
-// aplicacion
-<router-outlet></router-outlet>

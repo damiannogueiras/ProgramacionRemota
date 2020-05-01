@@ -1,25 +1,30 @@
-import { Component,  OnInit, AfterViewInit } from '@angular/core';
-
-// importamos el servicio de autenticacion
-import {FireAuthService} from './servicios/fire-auth.service';
-// importamos el servicio de acceso a la BD
-import {FireDBService} from './servicios/fire-db.service';
-
-// importamos la interface para guardar los datos
-import { Wbs } from './interfaces/wbs';
+import {Component, OnInit} from '@angular/core';
+import { map } from 'rxjs/operators';
+import { Breakpoints, BreakpointObserver } from '@angular/cdk/layout';
+import {FireDBService} from '../servicios/fire-db.service';
+import {Wbs} from '../interfaces/wbs';
 
 @Component({
-  selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+  selector: 'app-gridwb',
+  templateUrl: './gridwb.component.html',
+  styleUrls: ['./gridwb.component.css']
 })
-export class AppComponent implements OnInit{
+export class GridwbComponent implements OnInit {
   // array de la interface
   Workbenchs: Wbs[];
 
-  // inicializamos los objetos para poder usarlos en el html y aqui
-  constructor( public authApp: FireAuthService,
-               public dbApp: FireDBService) { }
+  /** Based on the screen size, switch from standard to one column per row */
+  cards = this.breakpointObserver.observe(Breakpoints.Handset).pipe(
+    map(({ matches }) => {
+      if (matches) {
+        return this.Workbenchs;
+      }
+      return this.Workbenchs;
+    })
+  );
+
+  constructor(private breakpointObserver: BreakpointObserver,
+              public dbApp: FireDBService) {}
 
   ngOnInit(): void {
     // listamos datos

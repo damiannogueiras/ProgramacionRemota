@@ -1,0 +1,36 @@
+h1 {
+  text-align: center;
+}
+
+.choose {
+  padding: 60px;
+  margin-top: 60px;
+  background-color: #3f51b5;
+  color: white;
+}
+
+.circular {
+  border-radius: 50%;
+}
+
+.img {
+  width: 100%;
+  margin-bottom: 18%;
+}
+.card-picture {
+  height: 180px;
+  width: auto;
+  margin: inherit;
+}
+.cardList > * {
+  box-sizing: border-box;
+  margin-bottom: 32px;
+  margin-left: 32px;
+  margin-right: 32px;
+  background-color: aliceblue;
+}
+
+a mat-icon {
+
+}
+

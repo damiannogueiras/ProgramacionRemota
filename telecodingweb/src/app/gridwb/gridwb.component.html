@@ -1,0 +1,30 @@
+<div class="docs-app-background">
+  <h1 class="choose  mat-display-2 telecoding-typography">Elige banco de trabajo</h1>
+  <div
+    fxLayout="row wrap"
+    fxLayout.lt-sm="column"
+    fxLayoutGap="32px"
+    fxLayoutAlign="flex-start"
+    class="cardList">
+    <ng-container *ngFor="let workbench of Workbenchs">
+        <mat-card class="mat-elevation-z8 telecoding-typography">
+          <mat-card-header >
+            <mat-card-title class="mat-card-title">
+              <span class="md-headline">{{workbench.nombre}}</span>
+            </mat-card-title>
+            <mat-card-subtitle><span class="md-headline">{{workbench.components}}</span></mat-card-subtitle>
+          </mat-card-header>
+          <img class="card-picture" mat-card-image [src]="workbench.avatar">
+          <mat-card-content>
+            <p [innerHTML]="workbench.descr"></p>
+          </mat-card-content>
+          <mat-card-actions>
+            <a target=_blank href="{{workbench.UD}}"><mat-icon color="accent" role="img">description</mat-icon></a>
+            <mat-icon *ngIf="workbench.status=='free'">input</mat-icon>
+            <mat-icon *ngIf="workbench.status=='busy'">alarm_on</mat-icon>
+          </mat-card-actions>
+        </mat-card>
+    </ng-container>
+
+  </div>
+</div>
