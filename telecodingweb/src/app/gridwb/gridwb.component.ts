@@ -1,8 +1,10 @@
 import {Component, OnInit} from '@angular/core';
-import { map } from 'rxjs/operators';
-import { Breakpoints, BreakpointObserver } from '@angular/cdk/layout';
 import {FireDBService} from '../servicios/fire-db.service';
 import {Wbs} from '../interfaces/wbs';
+import {MessageComponent} from '../message/message.component';
+import {MatDialog} from '@angular/material/dialog';
+import {Router} from '@angular/router';
+import {FireAuthService} from '../servicios/fire-auth.service';
 
 @Component({
   selector: 'app-gridwb',
@@ -13,18 +15,9 @@ export class GridwbComponent implements OnInit {
   // array de la interface
   Workbenchs: Wbs[];
 
-  /** Based on the screen size, switch from standard to one column per row */
-  cards = this.breakpointObserver.observe(Breakpoints.Handset).pipe(
-    map(({ matches }) => {
-      if (matches) {
-        return this.Workbenchs;
-      }
-      return this.Workbenchs;
-    })
-  );
-
-  constructor(private breakpointObserver: BreakpointObserver,
-              public dbApp: FireDBService) {}
+  constructor(public dbApp: FireDBService,
+              public miServAuth: FireAuthService,
+              private dialog: MatDialog, private router: Router) {}
 
   ngOnInit(): void {
     // listamos datos
@@ -53,5 +46,20 @@ export class GridwbComponent implements OnInit {
     this.dbApp.listarWbs().valueChanges().subscribe(data => {
       // aqui realizamos algo con los cambios de datos en la db
     })
+  }
+
+  // solicitud de banco
+  solicitud(banco){
+    console.log('solicitando banco ' + banco);
+    if (this.miServAuth.isLogueado()) {
+      console.log(banco);
+      this.dbApp.enter(banco, this.miServAuth.getUID(), this.miServAuth.getEmail(), this.miServAuth.getPhoto());
+    } else {
+      this.dialog.open(MessageComponent, {
+        data: {
+          message: 'Logueate!!!'
+        }
+      });
+    }
   }
 }

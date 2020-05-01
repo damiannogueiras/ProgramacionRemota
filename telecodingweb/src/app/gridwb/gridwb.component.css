@@ -11,6 +11,10 @@ h1 {
 
 .circular {
   border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  padding: 3px;
+  background: cadetblue;
 }
 
 .img {
@@ -30,7 +34,7 @@ h1 {
   background-color: aliceblue;
 }
 
-a mat-icon {
-
+.fondo {
+  background-color: aliceblue;
 }
 

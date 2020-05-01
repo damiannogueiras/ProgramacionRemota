@@ -12,5 +12,6 @@ export interface Wbs {
   'userLogueado' : string,
   'userNodeRED' : string,
   'avatar' : string,
-  'components': string
+  'components': string,
+  'photo': string
 }

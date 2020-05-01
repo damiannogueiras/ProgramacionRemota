@@ -9,8 +9,9 @@
     <ng-container *ngFor="let workbench of Workbenchs">
         <mat-card class="mat-elevation-z8 telecoding-typography">
           <mat-card-header >
+            <div mat-card-avatar style="padding: 5px"><img mat-card-image width="50px" class="circular" src="{{workbench.photo}}"></div>
             <mat-card-title class="mat-card-title">
-              <span class="md-headline">{{workbench.nombre}}</span>
+              <span class="md-headline">{{workbench.nombre}} ({{workbench.t_total}}min)</span>
             </mat-card-title>
             <mat-card-subtitle><span class="md-headline">{{workbench.components}}</span></mat-card-subtitle>
           </mat-card-header>
@@ -19,9 +20,17 @@
             <p [innerHTML]="workbench.descr"></p>
           </mat-card-content>
           <mat-card-actions>
-            <a target=_blank href="{{workbench.UD}}"><mat-icon color="accent" role="img">description</mat-icon></a>
-            <mat-icon *ngIf="workbench.status=='free'">input</mat-icon>
-            <mat-icon *ngIf="workbench.status=='busy'">alarm_on</mat-icon>
+            <a matTooltip="Unidad Didáctica" target=_blank href="{{workbench.UD}}"><mat-icon color="primary" role="img">description</mat-icon></a>
+            <button  class="mat-icon-button fondo" *ngIf="workbench.status=='free'" >
+              <mat-icon matTooltip="Libre" color="primary" class="mat-icon notranslate material-icons mat-icon-no-color" (click)="this.solicitud(workbench['$key'])">
+                input
+              </mat-icon>
+            </button>
+            <button class="mat-icon-button fondo" *ngIf="workbench.status=='busy'">
+              <mat-icon matTooltip="Ocupado, tiempo restante {{workbench.t_remaining}}mins"  color="accent" class="fondo" >
+                alarm_on
+              </mat-icon>
+            </button>
           </mat-card-actions>
         </mat-card>
     </ng-container>

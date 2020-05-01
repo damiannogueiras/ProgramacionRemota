@@ -18,13 +18,13 @@
           <span class="telecoding-typography" style="padding-left: 10px">TeleCoding</span>
       </div>
       <div class="col" style="text-align: right">
-          <div class="telecoding-typography" *ngIf="( authApp.user | async) as obs; else login">
+          <div class="telecoding-typography" *ngIf="( authApp.miAuth.user | async) as obs; else login">
             Hola, {{obs.email}}
             <button class="mat-raised-button telecoding-typography" (click)="authApp.logout()">Salir</button>
           </div>
           <ng-template #login>
             <button  class="mat-raised-button telecoding-typography" (click)="authApp.glogin()">
-              <i class="fab fa-google"></i>Entrar</button>
+              <i class="fab fa-google"></i> Entrar</button>
           </ng-template>
       </div>
     </mat-toolbar-row>

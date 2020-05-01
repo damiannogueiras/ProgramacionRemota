@@ -5,6 +5,7 @@ import { NgModule } from '@angular/core';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { GridwbComponent } from './gridwb/gridwb.component';
+import { MessageComponent} from './message/message.component';
 
 // importamos lo necesario para acceder a firebase
 import { AngularFireModule } from '@angular/fire';
@@ -25,11 +26,14 @@ import { LayoutModule } from '@angular/cdk/layout';
 import { MatButtonModule } from '@angular/material/button';
 import { MatMenuModule } from '@angular/material/menu';
 import { FlexLayoutModule} from '@angular/flex-layout';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @NgModule({
   declarations: [
     AppComponent,
-    GridwbComponent
+    GridwbComponent,
+    MessageComponent
   ],
   imports: [
     BrowserModule,
@@ -48,7 +52,10 @@ import { FlexLayoutModule} from '@angular/flex-layout';
     LayoutModule,
     MatButtonModule,
     MatMenuModule,
-    FlexLayoutModule
+    FlexLayoutModule,
+    MatDialogModule,
+    MatTooltipModule,
+
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -34,17 +34,28 @@ export class FireDBService {
    * Crea entrada según la uid del usuario
    * @param usuarioNuevoUID entrada nueva
    */
-  altausuario(usuarioNuevoUID: string, usuarioNuevoMail: string) {
-    this.db.object('users/' + usuarioNuevoUID.toString()).update({mail: usuarioNuevoMail});
+  altausuario(usuarioNuevoUID: string, usuarioNuevoMail: string, photo: string) {
+    this.db.object('users/' + usuarioNuevoUID.toString()).update({mail: usuarioNuevoMail, photoURL: photo});
     console.log('Insertado uid');
   }
 
   /**
    * Borra la entrada segun el UID del usuario
+   * Lo quita de los bancos?
    * @param uidBorrar uid del usuario logueado
    */
   bajausuario(uidBorrar: string) {
-    // borra entrada
-    this.db.object('users/' + uidBorrar).remove();
+    // ¿borra entrada?
+    // si el usuario está trabajando y por error sale de la sesion
+    // lo hechamos del banco o ¿solo contamos el tiempo?
+    // this.db.object('users/' + uidBorrar).remove();
+  }
+
+  /**
+   * ocupa un banco
+   */
+  enter(banco: string, peticionario: string, email: string, photo) {
+    this.db.object('workbenchs/' + banco).update({usuarioLogueado: email, photo: photo, status: "busy"});
+    this.db.object('users/' + peticionario).update({banco: banco});
   }
 }
