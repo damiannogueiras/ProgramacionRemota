@@ -1,7 +1,7 @@
 <div id="principal" class="telecoding-typography">
 
   <!-- Cabecera -->
-  <mat-toolbar  color="primary"  class="fix mat-elevation-z20">
+  <mat-toolbar  color="primary" class="fix mat-elevation-z20">
     <mat-toolbar-row>
       <div class="col">
           <a mat-button target="_blank" href="http://www.danielcastelao.org" title="Castelao">
@@ -18,12 +18,12 @@
           <span class="telecoding-typography" style="padding-left: 10px">TeleCoding</span>
       </div>
       <div class="col" style="text-align: right">
-          <div class="telecoding-typography" *ngIf="( authApp.miAuth.user | async) as obs; else login">
+          <div class="telecoding-typography" *ngIf="( miServAuth.miAuth.user | async) as obs; else login">
             Hola, {{obs.email}}
-            <button class="mat-raised-button telecoding-typography" (click)="authApp.logout()">Salir</button>
+            <button class="mat-raised-button telecoding-typography" (click)="miServAuth.logout()">Salir</button>
           </div>
           <ng-template #login>
-            <button  class="mat-raised-button telecoding-typography" (click)="authApp.glogin()">
+            <button  class="mat-raised-button telecoding-typography" (click)="miServAuth.glogin()">
               <i class="fab fa-google"></i> Entrar</button>
           </ng-template>
       </div>
@@ -34,10 +34,9 @@
   <app-gridwb></app-gridwb>
 
   <!-- Footer -->
-  <footer class="mat-background-primary fix-footer">
-    ¿ Quieres colaborar o hacer tu propio TeleCoding ?&nbsp;
-    <a href="https://github.com/damiancastelao/ProgramacionRemota" target="_blank" rel="noopener"> Repo en Github</a>
-  </footer>
+  <mat-toolbar color="primary" class="fix-footer mat-elevation-z20">
+    <a class="footer" href="https://github.com/damiancastelao/ProgramacionRemota" target="_blank" rel="noopener"> ¿ Quieres colaborar o hacer tu propio TeleCoding ? Repo en Github</a>
+  </mat-toolbar>
 
   <router-outlet></router-outlet>
 

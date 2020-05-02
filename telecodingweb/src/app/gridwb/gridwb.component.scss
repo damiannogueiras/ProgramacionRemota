@@ -1,14 +1,16 @@
+.choose {
+    // Use mat-color to extract individual colors from a palette.
+    background-color: #673fb4;
+    border-color: whitesmoke;
+    padding: 60px;
+    margin-top: 60px;
+    color: whitesmoke;
+  }
+
+
 h1 {
   text-align: center;
 }
-
-.choose {
-  padding: 60px;
-  margin-top: 60px;
-  background-color: #3f51b5;
-  color: white;
-}
-
 .circular {
   border-radius: 50%;
   width: 50px;
@@ -22,7 +24,7 @@ h1 {
   margin-bottom: 18%;
 }
 .card-picture {
-  height: 180px;
+  height: 100px;
   width: auto;
   margin: inherit;
 }

@@ -1,0 +1,15 @@
+<div class="fondo">
+  <h1  mat-dialog-title class="telecoding-typography">{{data.tipo}}</h1>
+  <mat-dialog-content class="telecoding-typography">{{data.message}}</mat-dialog-content>
+  <mat-dialog-actions align="center">
+    <button *ngIf="data.tipo === 'Aviso'" class="mat-raised-button telecoding-typography" mat-raised-button (click)="glogin()">
+      <i class="fab fa-google"></i> Entrar
+    </button>
+    <button  class="telecoding-typography" mat-raised-button (click)="closeMe()">
+      Close
+    </button>
+  </mat-dialog-actions>
+</div>
+
+
+

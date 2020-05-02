@@ -1,33 +1,44 @@
-<div class="docs-app-background">
-  <h1 class="choose  mat-display-2 telecoding-typography">Elige banco de trabajo</h1>
+<div>
+  <h1 class="choose mat-display-2 telecoding-typography">Elige banco de trabajo</h1>
+
   <div
     fxLayout="row wrap"
     fxLayout.lt-sm="column"
     fxLayoutGap="32px"
     fxLayoutAlign="flex-start"
     class="cardList">
-    <ng-container *ngFor="let workbench of Workbenchs">
-        <mat-card class="mat-elevation-z8 telecoding-typography">
+    <ng-container class="mat-elevation-z2" *ngFor="let workbench of miServDb.workbenchs | async">
+        <mat-card class="mat-elevation-z2 telecoding-typography">
           <mat-card-header >
-            <div mat-card-avatar style="padding: 5px"><img mat-card-image width="50px" class="circular" src="{{workbench.photo}}"></div>
+            <div mat-card-avatar style="padding: 5px"><img mat-card-image width="50px" class="circular" src="{{workbench.payload.val().photo}}"></div>
             <mat-card-title class="mat-card-title">
-              <span class="md-headline">{{workbench.nombre}} ({{workbench.t_total}}min)</span>
+              <span class="md-headline">{{workbench.payload.val().nombre}} ({{workbench.payload.val().t_total}}min)</span>
             </mat-card-title>
-            <mat-card-subtitle><span class="md-headline">{{workbench.components}}</span></mat-card-subtitle>
+            <mat-card-subtitle><span class="md-headline">{{workbench.payload.val().components}}</span></mat-card-subtitle>
           </mat-card-header>
-          <img class="card-picture" mat-card-image [src]="workbench.avatar">
+          <img class="card-picture" mat-card-image [src]="workbench.payload.val().avatar">
           <mat-card-content>
-            <p [innerHTML]="workbench.descr"></p>
+            <p [innerHTML]="workbench.payload.val().descr"></p>
+            <!-- debug
+            <p>{{workbench | json}}</p>
+            <code>{{workbench.payload.key}}</code>
+            -->
           </mat-card-content>
           <mat-card-actions>
-            <a matTooltip="Unidad Didáctica" target=_blank href="{{workbench.UD}}"><mat-icon color="primary" role="img">description</mat-icon></a>
-            <button  class="mat-icon-button fondo" *ngIf="workbench.status=='free'" >
-              <mat-icon matTooltip="Libre" color="primary" class="mat-icon notranslate material-icons mat-icon-no-color" (click)="this.solicitud(workbench['$key'])">
-                input
-              </mat-icon>
+            <a matTooltip="Unidad Didáctica" target=_blank href="{{workbench.payload.val().UD}}"><mat-icon color="primary" role="img">description</mat-icon></a>
+            <button  class="mat-icon-button fondo" *ngIf="workbench.payload.val().status=='free'" >
+              <ng-container *ngFor="let user of miServDb.users | async">
+                <ng-container *ngIf="user.payload.val().mail == miServAuth.getEmail()">
+                  <mat-icon matTooltip="Libre" color="primary" class="mat-icon notranslate material-icons mat-icon-no-color" (click)="this.solicitud(workbench.payload.key,user.payload.val().banco)">
+                    input
+                  </mat-icon>
+                  <!--<code>{{user.payload.val().banco}}:{{user.payload.val().mail}}</code>-->
+                </ng-container>
+
+              </ng-container>
             </button>
-            <button class="mat-icon-button fondo" *ngIf="workbench.status=='busy'">
-              <mat-icon matTooltip="Ocupado, tiempo restante {{workbench.t_remaining}}mins"  color="accent" class="fondo" >
+            <button class="mat-icon-button fondo" *ngIf="workbench.payload.val().status=='busy'">
+              <mat-icon matTooltip="Ocupado, tiempo restante {{workbench.payload.val().t_remaining}}mins"  color="accent" class="fondo" >
                 alarm_on
               </mat-icon>
             </button>

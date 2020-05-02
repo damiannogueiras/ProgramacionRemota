@@ -14,7 +14,6 @@ import {AngularFireDatabase} from '@angular/fire/database';
 })
 export class FireAuthService {
 
-  private authState: Observable<firebase.User>
   private currentUser: firebase.User = null;
 
   constructor(public miAuth: AngularFireAuth,
@@ -25,7 +24,7 @@ export class FireAuthService {
     this.miAuth.authState.subscribe(user => {
         if (user) {
           this.currentUser = user;
-          console.log('AUTHSTATE USER', user);
+          console.log('Usuario autenticado:', user);
         } else {
           this.currentUser = null;
         }

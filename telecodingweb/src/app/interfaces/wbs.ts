@@ -1,6 +1,6 @@
 // Interface para almacenar datos de los workbenchs
 
-export interface Wbs {
+export interface IWbs {
   'UD' : string,
   'URL' : string,
   'descr' : string,
