@@ -1,4 +1,5 @@
 import {Injectable, OnInit} from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 
 // las clases para trabajar con bases de datos
 import {AngularFireAction, AngularFireDatabase, AngularFireList} from '@angular/fire/database';
@@ -6,6 +7,7 @@ import {AngularFireAction, AngularFireDatabase, AngularFireList} from '@angular/
 import {BehaviorSubject, Observable, Subject} from 'rxjs';
 import {map, switchMap} from 'rxjs/operators';
 import {IUsers} from '../interfaces/users';
+import {IWbs} from '../interfaces/wbs';
 
 @Injectable({
   providedIn: 'root'
@@ -22,7 +24,73 @@ export class FireDBService implements OnInit {
   banco$: BehaviorSubject<string | null>;
   usersItems$: Observable<any[]>;
 
-  user: IUsers[];
+  // arrays con los datos
+  userArray: IUsers[];
+  workbenchsArray: IWbs[] = [];
+
+  avatarList: Array<string> = [
+    'https://ssl.gstatic.com/docs/common/profile/alligator_lg.png',
+    'http://ssl.gstatic.com/docs/common/profile/anteater_lg.png',
+    'http://ssl.gstatic.com/docs/common/profile/axolotl_lg.png',
+    'http://ssl.gstatic.com/docs/common/profile/badger_lg.png',
+    'http://ssl.gstatic.com/docs/common/profile/bat_lg.png',
+    'http://ssl.gstatic.com/docs/common/profile/beaver_lg.png',
+    'http://ssl.gstatic.com/docs/common/profile/buffalo_lg.png',
+    'http://ssl.gstatic.com/docs/common/profile/camel_lg.png',
+    'http://ssl.gstatic.com/docs/common/profile/capybara_lg.png',
+    'http://ssl.gstatic.com/docs/common/profile/chameleon_lg.png',
+    'http://ssl.gstatic.com/docs/common/profile/cheetah_lg.png',
+    'http://ssl.gstatic.com/docs/common/profile/chinchilla_lg.png',
+    'http://ssl.gstatic.com/docs/common/profile/chipmunk_lg.png',
+    'http://ssl.gstatic.com/docs/common/profile/chupacabra_lg.png',
+    'http://ssl.gstatic.com/docs/common/profile/cormorant_lg.png',
+    'http://ssl.gstatic.com/docs/common/profile/coyote_lg.png',
+    'http://ssl.gstatic.com/docs/common/profile/crow_lg.png',
+    'http://ssl.gstatic.com/docs/common/profile/dingo_lg.png',
+    'http://ssl.gstatic.com/docs/common/profile/dinosaur_lg.png',
+    'http://ssl.gstatic.com/docs/common/profile/dolphin_lg.png',
+    'http://ssl.gstatic.com/docs/common/profile/duck_lg.png',
+    'http://ssl.gstatic.com/docs/common/profile/elephant_lg.png',
+    'http://ssl.gstatic.com/docs/common/profile/ferret_lg.png',
+    'http://ssl.gstatic.com/docs/common/profile/frog_lg.png',
+    'http://ssl.gstatic.com/docs/common/profile/giraffe_lg.png',
+    'http://ssl.gstatic.com/docs/common/profile/grizzly_lg.png',
+    'http://ssl.gstatic.com/docs/common/profile/hedgehog_lg.png',
+    'http://ssl.gstatic.com/docs/common/profile/hippo_lg.png',
+    'http://ssl.gstatic.com/docs/common/profile/ibex_lg.png',
+    'http://ssl.gstatic.com/docs/common/profile/ifrit_lg.png',
+    'http://ssl.gstatic.com/docs/common/profile/jackal_lg.png',
+    'http://ssl.gstatic.com/docs/common/profile/jackalope_lg.png',
+    'http://ssl.gstatic.com/docs/common/profile/kangaroo_lg.png',
+    'http://ssl.gstatic.com/docs/common/profile/koala_lg.png',
+    'http://ssl.gstatic.com/docs/common/profile/kraken_lg.png',
+    'http://ssl.gstatic.com/docs/common/profile/lemur_lg.png',
+    'http://ssl.gstatic.com/docs/common/profile/leopard_lg.png',
+    'http://ssl.gstatic.com/docs/common/profile/liger_lg.png',
+    'http://ssl.gstatic.com/docs/common/profile/llama_lg.png',
+    'http://ssl.gstatic.com/docs/common/profile/mink_lg.png',
+    'http://ssl.gstatic.com/docs/common/profile/monkey_lg.png',
+    'http://ssl.gstatic.com/docs/common/profile/narwhal_lg.png',
+    'http://ssl.gstatic.com/docs/common/profile/nyancat_lg.png',
+    'http://ssl.gstatic.com/docs/common/profile/orangutan_lg.png',
+    'http://ssl.gstatic.com/docs/common/profile/panda_lg.png',
+    'http://ssl.gstatic.com/docs/common/profile/penguin_lg.png',
+    'http://ssl.gstatic.com/docs/common/profile/pumpkin_lg.png',
+    'http://ssl.gstatic.com/docs/common/profile/python_lg.png',
+    'http://ssl.gstatic.com/docs/common/profile/quagga_lg.png',
+    'http://ssl.gstatic.com/docs/common/profile/rabbit_lg.png',
+    'http://ssl.gstatic.com/docs/common/profile/raccoon_lg.png',
+    'http://ssl.gstatic.com/docs/common/profile/rhino_lg.png',
+    'http://ssl.gstatic.com/docs/common/profile/sheep_lg.png',
+    'http://ssl.gstatic.com/docs/common/profile/shrew_lg.png',
+    'http://ssl.gstatic.com/docs/common/profile/skunk_lg.png',
+    'http://ssl.gstatic.com/docs/common/profile/squirrel_lg.png',
+    'http://ssl.gstatic.com/docs/common/profile/tiger_lg.png',
+    'http://ssl.gstatic.com/docs/common/profile/turtle_lg.png',
+    'http://ssl.gstatic.com/docs/common/profile/walrus_lg.png',
+    'http://ssl.gstatic.com/docs/common/profile/wolverine_lg.png',
+    'http://ssl.gstatic.com/docs/common/profile/wombat_lg.png'
+  ];
 
   /**
    * Constructor de la clase
@@ -51,6 +119,7 @@ export class FireDBService implements OnInit {
       )
     );
 
+
     // lista de usuarios (no Observable, solo lista)
     this.usersList = this.miDB.list('/users');
 
@@ -67,9 +136,32 @@ export class FireDBService implements OnInit {
       })
      */
 
+    // guardamos los workbenchs en el array
+    this.miDB.list('workbenchs').snapshotChanges().subscribe(
+      data => {
+        this.workbenchsArray = [];
+        data.forEach(item => {
+          let a = item.payload.toJSON();
+          a['$key'] = item.key;
+          //console.log(item);
+          //console.log(a);
+          this.workbenchsArray.push(a as IWbs);
+        })
+        //console.log(this.workbenchsArray);
+      }
+    )
+
+    console.log("Fin del constructor");
   } // fin del constructor
 
   ngOnInit(): void {
+  }
+  /**
+   * Obtiene toda la informacion del fichero avatarlist.json
+   */
+  public getAvatar() {
+    //console.log(Math.round(Math.random() * this.avatarList.length) );
+    return (this.avatarList[Math.round(Math.random() * this.avatarList.length)]);
   }
 
   /**
@@ -77,6 +169,7 @@ export class FireDBService implements OnInit {
    * @param usuarioNuevoUID entrada nueva
    */
   altausuario(usuarioNuevoUID: string, usuarioNuevoMail: string, photo: string) {
+    // TODO manejar re-entrada sin borrar el banco donde esté
     this.miDB.object('users/' + usuarioNuevoUID.toString()).update({mail: usuarioNuevoMail, photoURL: photo});
     console.log('Insertado uid');
   }
@@ -96,12 +189,34 @@ export class FireDBService implements OnInit {
   /**
    * ocupa un banco
    * @banco: id del workbench
+   * @bancoNombre: nombre del banco a ocupar
    * @email: del peticionario
    * @photo: avatar del peticionario
    */
-  enter(banco: string, peticionario: string, email: string, photo) {
-    this.miDB.object('workbenchs/' + banco).update({usuarioLogueado: email, photo, status: 'busy'});
-    this.miDB.object('users/' + peticionario).update({banco: banco});
+  enter(banco: string, bancoNombre: string, peticionario: string, email: string, photo) {
+    this.miDB.object('workbenchs/' + banco).update({userLogueado: email, photo: photo, status: 'busy'});
+    this.miDB.object('users/' + peticionario).update({banco: banco, bancoNombre: bancoNombre});
+  }
+
+  /**
+   * salir de un banco, resetearlo
+   * @param bancoID a resetear
+   * @param bancoNombre nombre del banco
+   * @param peticionario no procede
+   * @param email del poseedor
+   * @param photo para el avatar
+   */
+
+  salir(bancoID: string, bancoNombre: string, peticionario: string) {
+    console.log('salir: '+ bancoNombre + ' ' + peticionario);
+    console.log(this.workbenchsArray);
+    var index = this.workbenchsArray.findIndex(function(item, i){
+      return item.nombre === bancoNombre
+    });
+    console.log(index);
+    this.getAvatar();
+    this.miDB.object('workbenchs/' + bancoID).update({status: 'free', t_remaining: this.workbenchsArray[index].t_total, userLogueado: '', photo: this.getAvatar()});
+    this.miDB.object('users/' + peticionario).update({banco: '', bancoNombre: ''});
   }
 
   /**
