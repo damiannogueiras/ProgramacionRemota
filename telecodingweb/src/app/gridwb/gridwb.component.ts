@@ -4,7 +4,7 @@ import {MessageComponent} from '../message/message.component';
 import {MatDialog} from '@angular/material/dialog';
 
 // comunicacion con el servidor express
-import { HttpClient } from "@angular/common/http";
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
 import { catchError, retry } from 'rxjs/operators';
@@ -33,26 +33,31 @@ export class GridwbComponent {
     // comprobamos que esté logueado
     if (this.miServAuth.isLogueado()) {
       // comprobamos si esta en un banco
-      if(bancoUsuario !== "") {
+      if (bancoUsuario !== '') {
         // esta en un banco
         this.dialog.open(MessageComponent, {
           data: {
             tipo: 'Aviso',
             message: '<p>Ya estás en el banco ' + bancoUsuarioNombre + '.</p><p>Si quieres entrar en otro debes abandonarlo.</p>',
-            id:'yaestas'
+            id: 'yaestas'
           }
         });
         // esta logueado y no esta en ningun banco
       } else {
-        console.log('Logueado y en ningun banco, Autorizado para '+ bancoSolicitado);
+        console.log('Logueado y en ningun banco, Autorizado para ' + bancoSolicitado);
         if (this.levantarBanco(bancoIDSolicitado)) {
-          this.miServDb.enter(bancoIDSolicitado, bancoSolicitado, this.miServAuth.getUID(), this.miServAuth.getEmail(), this.miServAuth.getPhoto());
+          this.miServDb.enter(
+            bancoIDSolicitado,
+            bancoSolicitado,
+            this.miServAuth.getUID(),
+            this.miServAuth.getEmail(),
+            this.miServAuth.getPhoto());
           this.dialog.open(MessageComponent, {
             data: {
               tipo: 'Info',
               message:
                 '<a target=”_blank” href=\"' + bancoURLSolicitado + '\">' + bancoURLSolicitado + '</a>',
-              id:'puedes'
+              id: 'puedes'
             }
           });
         } else {
@@ -60,10 +65,10 @@ export class GridwbComponent {
             data: {
               tipo: 'Error',
               message: 'Error al intentar habilitar banco',
-              id:'error'
+              id: 'error'
             }
           });
-        };
+        }
       }
       // no está logueado
     } else {
@@ -76,28 +81,28 @@ export class GridwbComponent {
    * @return si la operacion no dio error
    */
   levantarBanco(bancoID): boolean {
-    const headers = { 'Authorization': 'Bearer my-token', 'My-Custom-Header': 'foobar' }
-    var todoOK = true;
-    this.http.get<any>('http://telecoding.duckdns.org:4100/solicitud/' + bancoID, { headers }).subscribe(
+    const headers = { Authorization: 'Bearer my-token', 'My-Custom-Header': 'foobar'};
+    let todoOK = true;
+    this.http.get<any>('http://telecoding.duckdns.org:4100/solicitud/' + bancoID , { headers }).subscribe(
       data => {
-        console.log("Peticion realizada:" + data);
+        console.log('Peticion realizada:' + data);
         todoOK = true;
       },
       error => {
-        console.error("Error al levantar banco", error);
-        todoOK = false
+        console.error('Error al levantar banco', error);
+        todoOK = false;
       }
     );
     // da un error el get
     // provisionalmente devolvemos siempre true
     // para seguir trabajando
-    return true; //todoOK;
+    return true; // todoOK;
   }
 
   /**
    * Salir del banco. Para uso de pruebas
-   * @param bancoID
-   * @param bancoNombreSolicitado
+   * @param bancoID identificacion del banco a cerrar
+   * @param bancoNombreSolicitado nombre del banco a cerrar
    */
   salir(bancoID, bancoNombreSolicitado){
     this.miServDb.salir(bancoID, bancoNombreSolicitado, this.miServAuth.getUID());
@@ -111,7 +116,7 @@ export class GridwbComponent {
       data: {
         tipo: 'Aviso',
         message: 'Logueate!!!',
-        id:'logueate'
+        id: 'logueate'
       }
     });
   }
