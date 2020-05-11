@@ -8,42 +8,82 @@
     fxLayoutAlign="flex-start"
     class="cardList">
     <ng-container class="mat-elevation-z2" *ngFor="let workbench of miServDb.workbenchs | async">
-        <mat-card class="mat-elevation-z2 telecoding-typography">
-          <mat-card-header >
-            <div mat-card-avatar style="padding: 5px"><img mat-card-image width="50px" class="circular" src="{{workbench.payload.val().photo}}"></div>
-            <mat-card-title class="mat-card-title">
-              <span class="md-headline">{{workbench.payload.val().nombre}} ({{workbench.payload.val().t_total}}min)</span>
-            </mat-card-title>
-            <mat-card-subtitle><span class="md-headline">{{workbench.payload.val().components}}</span></mat-card-subtitle>
-          </mat-card-header>
-          <img class="card-picture" mat-card-image [src]="workbench.payload.val().avatar">
-          <mat-card-content>
-            <p [innerHTML]="workbench.payload.val().descr"></p>
-            <!-- debug
-            <p>{{workbench | json}}</p>
-            <code>{{workbench.payload.key}}</code>
-            -->
-          </mat-card-content>
-          <mat-card-actions>
-            <a matTooltip="Unidad Didáctica" target=_blank href="{{workbench.payload.val().UD}}"><mat-icon color="primary" role="img">description</mat-icon></a>
-            <button  class="mat-icon-button fondo" *ngIf="workbench.payload.val().status=='free'" >
-              <ng-container *ngFor="let user of miServDb.users | async">
-                <ng-container *ngIf="user.payload.val().mail == miServAuth.getEmail()">
-                  <mat-icon matTooltip="Libre" color="primary" class="mat-icon notranslate material-icons mat-icon-no-color" (click)="this.solicitud(workbench.payload.key,user.payload.val().banco)">
-                    input
-                  </mat-icon>
-                  <!--<code>{{user.payload.val().banco}}:{{user.payload.val().mail}}</code>-->
-                </ng-container>
+      <mat-card class="mat-elevation-z2 telecoding-typography">
+        <mat-card-header>
+          <div mat-card-avatar style="padding: 5px"><img mat-card-image width="50px" class="circular"
+                                                         src="{{workbench.payload.val().photo}}"></div>
+          <mat-card-title class="mat-card-title">
+            <span class="md-headline">{{workbench.payload.val().nombre}} ({{workbench.payload.val().t_total}}min)</span>
+          </mat-card-title>
+          <mat-card-subtitle><span class="md-headline">{{workbench.payload.val().components}}</span></mat-card-subtitle>
+        </mat-card-header>
+        <img class="card-picture" mat-card-image [src]="workbench.payload.val().avatar">
+        <mat-card-content>
+          <p [innerHTML]="workbench.payload.val().descr"></p>
+          <!-- debug
+          <p>{{workbench | json}}</p>
+          <code>{{workbench.payload.key}}</code>
+          -->
+        </mat-card-content>
 
-              </ng-container>
-            </button>
-            <button class="mat-icon-button fondo" *ngIf="workbench.payload.val().status=='busy'">
-              <mat-icon matTooltip="Ocupado, tiempo restante {{workbench.payload.val().t_remaining}}mins"  color="accent" class="fondo" >
+        <mat-card-actions>
+          <!-- Unidad Didactica -->
+          <a matTooltip="Unidad Didáctica" target=_blank href="{{workbench.payload.val().UD}}">
+            <mat-icon color="primary" role="img">description</mat-icon>
+          </a>
+
+          <!-- Status -->
+          <span *ngIf="workbench.payload.val().status=='busy'; else elseBusy">
+            <!-- Ocupado -->
+            <button class="mat-icon-button fondo">
+              <mat-icon matTooltip="Ocupado, tiempo restante {{workbench.payload.val().t_remaining}}mins" color="warn"
+                        class="mat-icon notranslate material-icons mat-icon-no-color">
                 alarm_on
               </mat-icon>
             </button>
-          </mat-card-actions>
-        </mat-card>
+          </span>
+          <!-- Libre -->
+          <ng-template #elseBusy>
+            <span *ngIf="!miServAuth.isLogueado(); else elseLogueado">
+              <!-- NO logueado -->
+              <button class="mat-icon-button fondo">
+                <mat-icon matTooltip="Libre, logueate para acceder"
+                          color="warn"
+                          class="mat-icon notranslate material-icons mat-icon-no-color"
+                          (click)="noLogueadoAviso()">
+                  input
+                </mat-icon>
+              </button>
+            </span>
+            <!-- Logueado -->
+            <ng-template #elseLogueado>
+              <ng-container *ngFor="let user of miServDb.users | async">
+              <button class="mat-icon-button fondo" *ngIf="user.payload.val().mail == miServAuth.getEmail()">
+
+                  <mat-icon matTooltip="Libre" color="primary"
+                            class="mat-icon notranslate material-icons mat-icon-no-color"
+                            (click)="this.solicitud(workbench.payload.key, workbench.payload.val().nombre, workbench.payload.val().URL, user.payload.val().banco, user.payload.val().bancoNombre)">
+                    input
+                  </mat-icon>
+                  <!--<code>{{user.payload.val().banco}}:{{user.payload.val().mail}}</code>-->
+
+              </button>
+              </ng-container>
+            </ng-template>
+          </ng-template>
+
+          <!-- para resetear el banco SOLO para uso mientras se desarrolla,
+          en produccion no existe -->
+          <!-- Ocupado -->
+          <button class="mat-icon-button fondo" (click)="salir(workbench.payload.key, workbench.payload.val().nombre)">
+            <mat-icon matTooltip="resetear workbench" color="warn"
+                      class="mat-icon notranslate material-icons mat-icon-no-color">
+              clear
+            </mat-icon>
+          </button>
+
+        </mat-card-actions>
+      </mat-card>
     </ng-container>
 
   </div>

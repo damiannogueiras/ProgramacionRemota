@@ -1,4 +1,3 @@
-import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 
 // componentes
@@ -29,6 +28,9 @@ import { FlexLayoutModule} from '@angular/flex-layout';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatTooltipModule } from '@angular/material/tooltip';
 
+import { HttpClientModule } from '@angular/common/http';
+import { BrowserModule }    from '@angular/platform-browser';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -36,7 +38,6 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     MessageComponent
   ],
   imports: [
-    BrowserModule,
     AppRoutingModule,
     AngularFireModule.initializeApp(environment.firebaseConfig),
     AngularFireDatabaseModule,
@@ -55,7 +56,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     FlexLayoutModule,
     MatDialogModule,
     MatTooltipModule,
-
+    HttpClientModule,
+    BrowserModule
   ],
   providers: [],
   bootstrap: [AppComponent]

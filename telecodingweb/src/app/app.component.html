@@ -1,5 +1,4 @@
 <div id="principal" class="telecoding-typography">
-
   <!-- Cabecera -->
   <mat-toolbar  color="primary" class="fix mat-elevation-z20">
     <mat-toolbar-row>
@@ -19,7 +18,7 @@
       </div>
       <div class="col" style="text-align: right">
           <div class="telecoding-typography" *ngIf="( miServAuth.miAuth.user | async) as obs; else login">
-            Hola, {{obs.email}}
+            Hola, {{obs.displayName}}
             <button class="mat-raised-button telecoding-typography" (click)="miServAuth.logout()">Salir</button>
           </div>
           <ng-template #login>

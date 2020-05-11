@@ -7,6 +7,8 @@ import {auth} from 'firebase';
 // importamos el servicio de acceso a la BD
 import {FireDBService} from './fire-db.service';
 import {AngularFireDatabase} from '@angular/fire/database';
+import {MessageComponent} from '../message/message.component';
+import {MatDialog} from '@angular/material/dialog';
 
 
 @Injectable({
@@ -17,7 +19,8 @@ export class FireAuthService {
   private currentUser: firebase.User = null;
 
   constructor(public miAuth: AngularFireAuth,
-              public miDB: FireDBService) {
+              public miDB: FireDBService,
+              private dialog: MatDialog,) {
 
     // nos suscribimos a los cambios del estado de la autenticacion
     // de esta manera sabemos si el usuario está logueado o no
@@ -45,6 +48,13 @@ export class FireAuthService {
       })
       .catch(error => {
         console.log('error en google login: ', error);
+        this.dialog.open(MessageComponent, {
+          data: {
+            tipo: 'Error',
+            message: 'Error al autenticar. Ponte en contacto con el administrador.',
+            id:'error'
+          }
+        });
       });
   }
 
@@ -57,8 +67,8 @@ export class FireAuthService {
 
   // esta logueado?
   isLogueado(): boolean {
-    console.log('islog?');
-    console.log(this.currentUser);
+    //console.log('islog?');
+    //console.log(this.currentUser);
     return (this.currentUser !== null);
     }
 
