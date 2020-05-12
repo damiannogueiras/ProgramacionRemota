@@ -29,15 +29,13 @@ var corsOptions = {
 // ---- SOLICITUD DE PUESTA EN MARCHA DE UN BANCO DE TRABAJO ---- //
 servidor.get("/solicitud/:id", cors(corsOptions), (req, res) => {
   levantarNodeRED(req.params.id);
-  //res.send("Listo");
-  res.sendStatus(200);
+  res.send("{\"Listo\":1}");
 });
 
 // ---- SOLICITUD DE CIERRE DUN BANCO DE TRABAJO ---- //
 servidor.get("/cierre/:id", cors(corsOptions), (req, res) => {
   deleteNodeRED(req.params.id);
-  //res.send("Listo");
-  res.sendStatus(200);
+  res.send("{\"Listo\":1}");
 });
 
 

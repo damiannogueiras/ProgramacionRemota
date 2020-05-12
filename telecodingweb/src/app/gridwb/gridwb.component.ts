@@ -85,7 +85,8 @@ export class GridwbComponent {
     let todoOK = true;
     this.http.get<any>('http://telecoding.duckdns.org:4100/solicitud/' + bancoID , { headers }).subscribe(
       data => {
-        console.log('Peticion realizada:' + data);
+        console.log('Respuesta express:');
+        console.log(data);
         todoOK = true;
       },
       error => {
@@ -93,10 +94,7 @@ export class GridwbComponent {
         todoOK = false;
       }
     );
-    // da un error el get
-    // provisionalmente devolvemos siempre true
-    // para seguir trabajando
-    return true; // todoOK;
+    return todoOK;
   }
 
   /**
@@ -105,7 +103,20 @@ export class GridwbComponent {
    * @param bancoNombreSolicitado nombre del banco a cerrar
    */
   salir(bancoID, bancoNombreSolicitado){
+    let todoOK = true;
     this.miServDb.salir(bancoID, bancoNombreSolicitado, this.miServAuth.getUID());
+    this.http.get<string>('http://telecoding.duckdns.org:4100/cierre/' + bancoID).subscribe(
+      data => {
+        console.log('Respuesta express:');
+        console.log(data);
+        todoOK = true;
+      },
+      error => {
+        console.error('Error al cerrar banco', error);
+        todoOK = false;
+      }
+    );
+    return todoOK;
   }
 
   /**
