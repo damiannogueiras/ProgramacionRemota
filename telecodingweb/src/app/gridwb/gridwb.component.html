@@ -11,13 +11,13 @@
       <mat-card class="mat-elevation-z2 telecoding-typography">
         <mat-card-header>
           <div mat-card-avatar style="padding: 5px"><img mat-card-image width="50px" class="circular"
-                                                         src="{{workbench.payload.val().photo}}"></div>
+                                                         src="{{workbench.payload.val().avatar}}"></div>
           <mat-card-title class="mat-card-title">
             <span class="md-headline">{{workbench.payload.val().nombre}} ({{workbench.payload.val().t_total}}min)</span>
           </mat-card-title>
           <mat-card-subtitle><span class="md-headline">{{workbench.payload.val().components}}</span></mat-card-subtitle>
         </mat-card-header>
-        <img class="card-picture" mat-card-image [src]="workbench.payload.val().avatar">
+        <img class="card-picture" mat-card-image [src]="workbench.payload.val().photo">
         <mat-card-content>
           <p [innerHTML]="workbench.payload.val().descr"></p>
           <!-- debug

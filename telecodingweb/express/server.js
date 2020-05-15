@@ -15,8 +15,9 @@ const _port = 4100;
 // usamos cors para permitir peticiones desde el angular
 var cors = require('cors');
 servidor.use(cors());
+// 'http://telecoding.duckdns.org:4200',
 var corsOptions = {
-  origin: 'http://telecoding.duckdns.org:4200',
+  origin: '*',
   optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
 }
 
@@ -83,6 +84,10 @@ function levantarNodeRED(id) {
   });
 }
 
+/**
+ * Ejecuta comandos para parar instancia de node-RED
+ * @param id banco de trabajo, instancia de node-RED
+ */
 function deleteNodeRED(id){
   console.log("Delete " + id);
   // modulo child_process para ejecutar comandos del sistema

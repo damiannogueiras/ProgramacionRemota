@@ -17,7 +17,6 @@ export class FireDBService implements OnInit {
 
   workbenchs: Observable<any[]>;
   users: Observable<any[]>;
-
   usersList: AngularFireList<any>;
 
   mail$: BehaviorSubject<string | null>;
@@ -99,7 +98,7 @@ export class FireDBService implements OnInit {
   constructor(public miDB: AngularFireDatabase) {
 
     // recuperamos los bancos y estamos pendiente de los cambios
-    //this.workbenchs = miDB.list('workbenchs').valueChanges();
+    // this.workbenchs = miDB.list('workbenchs').valueChanges();
 
     // recuperamos los usuarios y estamos pendiente de los cambios
     this.users = miDB.list('users').valueChanges().pipe(
@@ -170,7 +169,7 @@ export class FireDBService implements OnInit {
    */
   altausuario(usuarioNuevoUID: string, usuarioNuevoMail: string, photo: string) {
     // TODO manejar re-entrada sin borrar el banco donde esté
-    this.miDB.object('users/' + usuarioNuevoUID.toString()).update({mail: usuarioNuevoMail, photoURL: photo});
+    this.miDB.object('users/' + usuarioNuevoUID.toString()).update({banco: '', bancoNombre: '', mail: usuarioNuevoMail, photoURL: photo});
     console.log('Insertado uid');
   }
 
@@ -191,10 +190,10 @@ export class FireDBService implements OnInit {
    * @banco: id del workbench
    * @bancoNombre: nombre del banco a ocupar
    * @email: del peticionario
-   * @photo: avatar del peticionario
+   * @avatar: avatar del peticionario
    */
-  enter(banco: string, bancoNombre: string, peticionario: string, email: string, photo) {
-    this.miDB.object('workbenchs/' + banco).update({userLogueado: email, photo: photo, status: 'busy'});
+  enter(banco: string, bancoNombre: string, peticionario: string, email: string, avatar) {
+    this.miDB.object('workbenchs/' + banco).update({userLogueado: email, avatar: avatar, status: 'busy'});
     this.miDB.object('users/' + peticionario).update({banco: banco, bancoNombre: bancoNombre});
   }
 
@@ -215,7 +214,7 @@ export class FireDBService implements OnInit {
     });
     console.log(index);
     this.getAvatar();
-    this.miDB.object('workbenchs/' + bancoID).update({status: 'free', t_remaining: this.workbenchsArray[index].t_total, userLogueado: '', photo: this.getAvatar()});
+    this.miDB.object('workbenchs/' + bancoID).update({status: 'free', t_remaining: this.workbenchsArray[index].t_total, userLogueado: '', avatar: this.getAvatar()});
     this.miDB.object('users/' + peticionario).update({banco: '', bancoNombre: ''});
   }
 
