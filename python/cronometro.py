@@ -1,8 +1,11 @@
+#!/home/pi/ProgramacionRemota/python/env/bin/ python3
+
 #############################################
 #
 # Control del tiempo de cada banco de trabajo
 #
 #############################################
+
 from random import randint, seed
 import subprocess
 import pyrebase
@@ -123,15 +126,15 @@ for wb in wbs.each():
 
         # filtramos el usuario que estaba utilizandolo
         # la 'key' es la id, AA00, AA01, etc.
-        # la suma es necesaria para que le anada las comillas sino da error
+        # la suma es necesaria para que le anhada las comillas sino da error
         # https://stackoverflow.com/questions/41789515/how-to-filter-complex-object-in-firebase
         id_banco = "" + wb.key()
-        print(id_banco)
+        print("Parando: " + id_banco)
         # filtramos el usuario de este banco
         users = db.child('users').order_by_child('banco').equal_to(id_banco).get()
         for user in users.each():
-          # liberamos al usuario
-          db.child("users").child(user.key()).update({"banco": "-", "bancoNombre": "-"})
+            # liberamos al usuario
+            db.child("users").child(user.key()).update({"banco": "-", "bancoNombre": "-"})
 
         # cerramos el banco
         # necesitamos shell=True, ya que no separamos los argumentos
@@ -139,5 +142,5 @@ for wb in wbs.each():
         comando_pm2 = 'pm2 stop /home/pi/ProgramacionRemota/pm2/ecosystem.config.js --only ' + id_banco
         banco_cerrado = subprocess.Popen(comando_pm2, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
         output, error = banco_cerrado.communicate()
-        #print(output)
-        #print(error)
+        # print(output)
+        # print(error)
