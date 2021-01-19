@@ -1,0 +1,86 @@
+{
+  "servers" : {
+    "AA" : {
+      "URL" : "192.168.1.162",
+      "descr" : "raspi del castelao"
+    }
+  },
+  "users" : {
+    "3hEuUivL0vPWi83YJJh1ZLNUaWw2" : {
+      "banco" : "dnn",
+      "mail" : "damiannogueiras@gmail.com",
+      "photoURL" : "https://lh3.googleusercontent.com/a-/AOh14GjzX5Usqcg_bwdCNhXEl0UZxNJqXGGF6WdIi0vvRg"
+    },
+    "AA00" : {
+      "status" : "busy"
+    },
+    "ew0stSRuyHOTpRHgFteBwSvqhHM2" : {
+      "banco" : "AA01",
+      "mail" : "damian@danielcastelao.org",
+      "photoURL" : "https://lh3.googleusercontent.com/a-/AOh14GjBbPv4jKG9pgD18c4ucx1IMm7IqhtwHt8UE0eM"
+    }
+  },
+  "workbenchs" : {
+    "AA00" : {
+      "UD" : "http://migoogledrive.com/ud.pdf",
+      "URL" : "http://192.168.1.162:1880",
+      "avatar" : "https://aws1.discourse-cdn.com/business6/uploads/nodered/original/1X/778549404735e222c89ce5449482a189ace8cdae.png",
+      "components" : "node-red",
+      "descr" : "<p>Para uso genérico, todos los elementos.</p><p>#base #todos</p>",
+      "nombre" : "Genérico",
+      "pass" : 1234,
+      "photo" : "https://lh3.googleusercontent.com/a-/AOh14GjBbPv4jKG9pgD18c4ucx1IMm7IqhtwHt8UE0eM",
+      "status" : "free",
+      "t_remaining" : 24,
+      "t_total" : 30,
+      "userLogueado" : "pep@danielcastelao.org",
+      "userNodeRED" : "yoda",
+      "usuarioLogueado" : "damian@danielcastelao.org"
+    },
+    "AA01" : {
+      "UD" : "http://192.168.1.162:1881/UD/semaforo",
+      "URL" : "http://192.168.1.162:1890",
+      "avatar" : "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcR7pQIA6LtKQcSnQAuerbjaP5b0UnK7Abf8tuuLPfj-6COcYFY5&usqp=CAU",
+      "components" : "leds",
+      "descr" : "<p>Tres led conectadas a pines 'pwm'.</p><p>#leds #basico #medio</p>",
+      "nombre" : "Semaforo",
+      "photo" : "https://lh3.googleusercontent.com/a-/AOh14GjBbPv4jKG9pgD18c4ucx1IMm7IqhtwHt8UE0eM",
+      "status" : "busy",
+      "t_remaining" : 32,
+      "t_total" : 60,
+      "userLogueado" : "ninguno",
+      "userNodeRED" : "kenobi",
+      "usuarioLogueado" : "damian@danielcastelao.org"
+    },
+    "AA02" : {
+      "UD" : "http://bla.bla",
+      "URL" : "http://192.168.1.162:1882",
+      "avatar" : "https://miro.medium.com/max/566/1*2BC5XL-ZET637vOuvMTSUQ.png",
+      "components" : "jhonny five",
+      "descr" : "<p>Práctica con Johnny Five</p><p>#base #medio #javascript</p>",
+      "nombre" : "Johnny five",
+      "photo" : "https://lh3.googleusercontent.com/a-/AOh14GjBbPv4jKG9pgD18c4ucx1IMm7IqhtwHt8UE0eM",
+      "status" : "free",
+      "t_remaining" : 120,
+      "t_total" : 120,
+      "userLogueado" : "ninguno",
+      "userNodeRED" : "anakin",
+      "usuarioLogueado" : "damian@danielcastelao.org"
+    },
+    "AA03" : {
+      "UD" : "http://xunta.es/material",
+      "URL" : "http://192.168.1.162:1883",
+      "avatar" : "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQ3EfhwLP3RKswCtld_GOIKufwnZJcyH5fYoqUl1XCdHtlvfm8b&usqp=CAU",
+      "components" : "motor steep, seven-segment display",
+      "descr" : "<p>Simula un ascensor con visualización de pisos</p><p>motor steep con finales de carrera.</p><p>#base #medio #javascript</p>",
+      "nombre" : "Ascensor",
+      "photo" : "https://lh3.googleusercontent.com/a-/AOh14GjBbPv4jKG9pgD18c4ucx1IMm7IqhtwHt8UE0eM",
+      "status" : "free",
+      "t_remaining" : 11,
+      "t_total" : 1,
+      "userLogueado" : "ninguno",
+      "userNodeRED" : "jinn",
+      "usuarioLogueado" : "damian@danielcastelao.org"
+    }
+  }
+}

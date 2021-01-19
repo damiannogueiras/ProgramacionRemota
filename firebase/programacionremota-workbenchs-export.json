@@ -1,0 +1,74 @@
+{
+  "AA00" : {
+    "UD" : "https://nodered.org/docs/tutorials/first-flow",
+    "URL" : "http://telecoding.duckdns.org:1880",
+    "avatar" : "http://ssl.gstatic.com/docs/common/profile/jackalope_lg.png",
+    "components" : "node-red",
+    "descr" : "<p>Para uso genérico, todos los elementos.</p><p>#base #todos</p>",
+    "nombre" : "Node-RED",
+    "pass" : 1234,
+    "photo" : "https://firebasestorage.googleapis.com/v0/b/programacionremota.appspot.com/o/imagenes%2FAA00.png?alt=media&token=6242714d-6649-4470-8ba5-11f1aa620497",
+    "status" : "free",
+    "t_remaining" : 2,
+    "t_total" : 2,
+    "userLogueado" : "",
+    "userNodeRED" : "yoda"
+  },
+  "AA01" : {
+    "UD" : "https://docs.google.com/presentation/d/1ytPKrt_Z0YRl9auTs7kKdGRg958nuyBx_7ix9WUcitA/pub?start=false&loop=false&delayms=3000&slide=id.g1e12c66488_0_0",
+    "URL" : "http://telecoding.duckdns.org:1881",
+    "avatar" : "http://ssl.gstatic.com/docs/common/profile/nyancat_lg.png",
+    "components" : "leds",
+    "descr" : "<p>Tres led conectadas a pines 'pwm'.</p><p>#leds #basico #medio</p>",
+    "nombre" : "Semaforo",
+    "photo" : "https://firebasestorage.googleapis.com/v0/b/programacionremota.appspot.com/o/imagenes%2FAA01.png?alt=media&token=d71bee85-f8f2-42bf-910e-170cbadcd885",
+    "status" : "free",
+    "t_remaining" : 3,
+    "t_total" : 3,
+    "userLogueado" : "",
+    "userNodeRED" : "kenobi"
+  },
+  "AA02" : {
+    "UD" : "http://johnny-five.io/examples/",
+    "URL" : "http://telecoding.duckdns.org:1882",
+    "avatar" : "http://ssl.gstatic.com/docs/common/profile/squirrel_lg.png",
+    "components" : "jhonny five",
+    "descr" : "<p>Práctica con Johnny Five</p><p>#base #medio #javascript</p>",
+    "nombre" : "Johnny five",
+    "photo" : "https://firebasestorage.googleapis.com/v0/b/programacionremota.appspot.com/o/imagenes%2FAA02.png?alt=media&token=61024b33-95f3-4643-b911-60de0e0275ff",
+    "status" : "free",
+    "t_remaining" : 4,
+    "t_total" : 4,
+    "userLogueado" : "",
+    "userNodeRED" : "anakin"
+  },
+  "AA03" : {
+    "UD" : "https://moodle.danielcastelao.org/course/view.php?id=244",
+    "URL" : "http://telecoding.duckdns.org:1883",
+    "avatar" : "http://ssl.gstatic.com/docs/common/profile/shrew_lg.png",
+    "components" : "motor steep, seven-segment display",
+    "descr" : "<p>Simula un ascensor con visualización de pisos</p><p>motor steep con finales de carrera.</p><p>#base #medio #javascript</p>",
+    "nombre" : "Ascensor",
+    "photo" : "https://firebasestorage.googleapis.com/v0/b/programacionremota.appspot.com/o/imagenes%2FAA03.png?alt=media&token=f5bc527b-5aa7-453d-a5b7-4395b4dfc2a4",
+    "status" : "free",
+    "t_remaining" : 2,
+    "t_total" : 2,
+    "userLogueado" : "",
+    "userNodeRED" : "jinn"
+  },
+  "AA04" : {
+    "UD" : "https://www.luisllamas.es/medir-nivel-luz-con-arduino-y-fotoresistencia-ldr/",
+    "URL" : "http://telecoding.duckdns.org:1884",
+    "avatar" : "http://ssl.gstatic.com/docs/common/profile/shrew_lg.png",
+    "components" : "servo, laser, LDR",
+    "descr" : "<p>Apuntar con un laser a una diana</p><p>Servos, laser, sensor luz (LDR).</p><p>#base #medio #servo #ldr</p>",
+    "nombre" : "Tiro a la diana",
+    "photo" : "https://firebasestorage.googleapis.com/v0/b/programacionremota.appspot.com/o/imagenes%2FAA04.png?alt=media&token=f5bc527b-5aa7-453d-a5b7-4395b4dfc2a4",
+    "status" : "free",
+    "t_remaining" : 2,
+    "t_total" : 2,
+    "userLogueado" : "",
+    "userNodeRED" : "secura"
+  }
+
+}
