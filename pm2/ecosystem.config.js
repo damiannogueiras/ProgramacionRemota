@@ -35,5 +35,19 @@ module.exports = {
             watch: 'false',
             name: 'AA04'
         },
+        {
+            script: 'node-red',
+            args: '-s /home/pi/ProgramacionRemota/node-red/AA10/settings.js',
+            cwd: '/home/pi/ProgramacionRemota/node-red/AA10',
+            watch: 'false',
+            name: 'AA10'
+        },
+        {
+            script: 'node-red',
+            args: '-s /home/pi/ProgramacionRemota/node-red/AA11/settings.js',
+            cwd: '/home/pi/ProgramacionRemota/node-red/AA11',
+            watch: 'false',
+            name: 'AA11'
+        },
     ]
 };
