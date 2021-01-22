@@ -1,0 +1,13 @@
+export const environment = {
+  production: true,
+  firebaseConfig: {
+    apiKey: "AIzaSyAatzOzuR6BBb3XcqrW49h774J7BC2BBw4",
+    authDomain: "programacionremota.firebaseapp.com",
+    databaseURL: "https://programacionremota.firebaseio.com",
+    projectId: "programacionremota",
+    storageBucket: "programacionremota.appspot.com",
+    messagingSenderId: "1030325334726",
+    appId: "1:1030325334726:web:d93058dcf03c3ffce81dc7",
+    measurementId: "G-NLCE8RPMG7"
+  }
+};

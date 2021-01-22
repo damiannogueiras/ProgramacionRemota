@@ -1,4 +1,4 @@
-#!/home/pi/ProgramacionRemota/python/env/bin/ python3
+#!/home/pi/ProgramacionRemota/python/env/bin/python3
 
 #############################################
 #

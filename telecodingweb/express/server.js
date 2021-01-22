@@ -31,8 +31,8 @@ var exec = require('child_process').exec;
 
 // Rutas
 // ---- SOLICITUD DE PUESTA EN MARCHA DE UN BANCO DE TRABAJO ---- //
-servidor.get("/solicitud/:id", cors(corsOptions), (req, res) => {
-  levantarNodeRED(req.params.id);
+servidor.get("/solicitud", cors(corsOptions), (req, res) => {
+  levantarNodeRED(req.query.bancoid, req.query.user);
   res.send("{\"Listo\":1}");
 });
 
@@ -51,8 +51,8 @@ servidor.listen(_port, "0.0.0.0", () => {
  * Ejecuta comandos para levantar instancia de node-RED
  * @param bancoID banco de trabajo, instancia de node-RED
  */
-function levantarNodeRED(bancoID) {
-  console.log("Start " + bancoID);
+function levantarNodeRED(bancoID, user) {
+  console.log("Start " + bancoID + " de " + user);
 
   /* comando para ejecutar node-red con pm2
    * pm2 start script
@@ -61,12 +61,14 @@ function levantarNodeRED(bancoID) {
    * -- argumentos para node-red
    * -s setting de node-red
    * -p port
-   * -u user dir
+   * -u user dir (utilizamos email del usuario)
    */
   let pm2_start = '';
+  // script
   let argsNodeRED = ' -p ' + bancoID.substr(2, bancoID.length);
-  argsNodeRED = argsNodeRED + ' -u ' + _homeNodesRED + '/' + bancoID;
-  argsNodeRED = argsNodeRED + ' flow' + bancoID + '.json';
+  // user home
+  argsNodeRED = argsNodeRED + ' -u ' + _homeNodesRED + '/' + bancoID + '/users/' + user;
+  //argsNodeRED = argsNodeRED + ' flow' + bancoID + '.json';
   console.log(argsNodeRED);
   pm2_start = 'pm2 start node-red --watch --name ' + bancoID + ' -- ' + argsNodeRED;
   ejecutarComando(pm2_start);

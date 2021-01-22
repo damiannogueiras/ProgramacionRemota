@@ -1,5 +1,10 @@
 <div>
-  <h1 class="choose mat-display-2 telecoding-typography">Elige banco de trabajo</h1>
+  <h1 class="choose mat-display-2 telecoding-typography"><mat-icon matTooltip="Elige" class="icon-15x">input</mat-icon> Elige banco de trabajo
+    <br><br>
+  <h5>
+    <mat-icon matTooltip="UD">description</mat-icon> Unidad didáctica <mat-icon matTooltip="Ocupado" color="warn"> alarm_on</mat-icon> Banco ocupado, tiempo hasta que quede libre
+  </h5>
+  </h1>
 
   <div
     fxLayout="row wrap"
@@ -41,6 +46,13 @@
                 alarm_on
               </mat-icon>
             </button>
+            <!-- para resetear el banco SOLO para uso mientras se desarrolla, en produccion no existe -->
+                <button class="mat-icon-button fondo" (click)="salir(workbench.payload.key, workbench.payload.val().nombre)" >
+                  <mat-icon matTooltip="resetear workbench" color="warn"
+                            class="mat-icon notranslate material-icons mat-icon-no-color">
+                    clear
+                  </mat-icon>
+                </button>
           </span>
           <!-- Libre -->
           <ng-template #elseBusy>
@@ -62,7 +74,7 @@
 
                   <mat-icon matTooltip="Libre" color="primary"
                             class="mat-icon notranslate material-icons mat-icon-no-color"
-                            (click)="this.solicitud(workbench.payload.key, workbench.payload.val().nombre, workbench.payload.val().URL, user.payload.val().banco, user.payload.val().bancoNombre)">
+                            (click)="this.solicitud(workbench.payload.key, workbench.payload.val().nombre, user.payload.val().banco, user.payload.val().bancoNombre)">
                     input
                   </mat-icon>
                   <!--<code>{{user.payload.val().banco}}:{{user.payload.val().mail}}</code>-->
@@ -71,17 +83,6 @@
               </ng-container>
             </ng-template>
           </ng-template>
-
-          <!-- para resetear el banco SOLO para uso mientras se desarrolla,
-          en produccion no existe -->
-          <!-- Ocupado -->
-          <button class="mat-icon-button fondo" (click)="salir(workbench.payload.key, workbench.payload.val().nombre)">
-            <mat-icon matTooltip="resetear workbench" color="warn"
-                      class="mat-icon notranslate material-icons mat-icon-no-color">
-              clear
-            </mat-icon>
-          </button>
-
         </mat-card-actions>
       </mat-card>
     </ng-container>
