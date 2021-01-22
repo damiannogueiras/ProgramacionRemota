@@ -139,7 +139,7 @@ for wb in wbs.each():
         # cerramos el banco
         # necesitamos shell=True, ya que no separamos los argumentos
         # https://stackoverflow.com/questions/18962785/oserror-errno-2-no-such-file-or-directory-while-using-python-subprocess-in-dj
-        comando_pm2 = 'pm2 stop /home/pi/ProgramacionRemota/pm2/ecosystem.config.js --only ' + id_banco
+        comando_pm2 = 'pm2 delete ' + id_banco
         banco_cerrado = subprocess.Popen(comando_pm2, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
         output, error = banco_cerrado.communicate()
         # print(output)

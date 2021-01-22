@@ -12,19 +12,22 @@ const servidor = express();
 const compression = require("compression");
 // puerto del express
 const _port = 4100;
+const _dominio = "192.168.1.43";
+const _homeNodesRED = '/home/pi/ProgramacionRemota/node-red';
+
 // usamos cors para permitir peticiones desde el angular
 var cors = require('cors');
 servidor.use(cors());
-// 'http://telecoding.duckdns.org:4200',
 var corsOptions = {
-  origin: '*',
+  origin: 'http://' + _dominio + ':4200',
   optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
 }
 
 // comprimir encabezados
-//servidor.use(compression());
+servidor.use(compression());
 
-
+// modulo child_process para ejecutar comandos del sistema
+var exec = require('child_process').exec;
 
 // Rutas
 // ---- SOLICITUD DE PUESTA EN MARCHA DE UN BANCO DE TRABAJO ---- //
@@ -35,69 +38,59 @@ servidor.get("/solicitud/:id", cors(corsOptions), (req, res) => {
 
 // ---- SOLICITUD DE CIERRE DUN BANCO DE TRABAJO ---- //
 servidor.get("/cierre/:id", cors(corsOptions), (req, res) => {
-  deleteNodeRED(req.params.id);
-  res.send("{\"Listo\":1}");
+  stopNodeRED(req.params.id);
+  res.send("{\"Listo\":0}");
 });
-
-
-/* No termina de funcionar para el dominio externo
- * si para la ip local
-// ---- SERVE ANGULAR APP ---- //
-// directorio para servir la app de angular
-const _angular_folder = 'dist/telecodingweb';
-servidor.all('/', function (req, res) {
-  res.status(200).sendFile(`/`, {root: _angular_folder});
-});
-*/
-
 
 // escucha del servidor
 servidor.listen(_port, "0.0.0.0", () => {
-  console.log("Servidor corriendo")
+  console.log("Servidor corriendo " + _port)
 });
 
 /**
  * Ejecuta comandos para levantar instancia de node-RED
- * @param id banco de trabajo, instancia de node-RED
+ * @param bancoID banco de trabajo, instancia de node-RED
  */
-function levantarNodeRED(id) {
-  console.log("Levantando " + id);
-  // modulo child_process para ejecutar comandos del sistema
-  var exec = require('child_process').exec;
+function levantarNodeRED(bancoID) {
+  console.log("Start " + bancoID);
 
-  // 'pm2', ['start /home/pi/ProgramacionRemota/pm2/ecosystem.config.js'
-  // comando a ejecutar
-  let comando_pm2;
-  comando_pm2 = 'pm2 start /home/pi/ProgramacionRemota/pm2/ecosystem.config.js --only ' + id;
-  const child = exec(comando_pm2);
-  // Pasamos los parámetros error, stdout la salida del comando
-  child.stdout.on('data', (data) => {
-    console.log('stdout: ' + data);
-  });
-
-  child.stderr.on('data', (data) => {
-    console.error('stderr: ' + data);
-  });
-
-  child.on('close', (code) => {
-    console.log('child process exited with code ' + code);
-  });
+  /* comando para ejecutar node-red con pm2
+   * pm2 start script
+   * --watch restar on file change
+   * --name nombre de la aplicacion
+   * -- argumentos para node-red
+   * -s setting de node-red
+   * -p port
+   * -u user dir
+   */
+  let pm2_start = '';
+  let argsNodeRED = ' -p ' + bancoID.substr(2, bancoID.length);
+  argsNodeRED = argsNodeRED + ' -u ' + _homeNodesRED + '/' + bancoID;
+  argsNodeRED = argsNodeRED + ' flow' + bancoID + '.json';
+  console.log(argsNodeRED);
+  pm2_start = 'pm2 start node-red --watch --name ' + bancoID + ' -- ' + argsNodeRED;
+  ejecutarComando(pm2_start);
 }
 
 /**
  * Ejecuta comandos para parar instancia de node-RED
- * @param id banco de trabajo, instancia de node-RED
+ * @param bancoID banco de trabajo, instancia de node-RED
  */
-function deleteNodeRED(id){
-  console.log("Delete " + id);
-  // modulo child_process para ejecutar comandos del sistema
-  var exec = require('child_process').exec;
-
-  // 'pm2', ['start /home/pi/ProgramacionRemota/pm2/ecosystem.config.js'
+function stopNodeRED(bancoID){
+  console.log("Delete " + bancoID);
   // comando a ejecutar
-  let comando_pm2;
-  comando_pm2 = 'pm2 stop /home/pi/ProgramacionRemota/pm2/ecosystem.config.js --only ' + id;
-  const child = exec(comando_pm2);
+  let pm2_stop;
+  pm2_stop = 'pm2 delete ' + bancoID;
+  ejecutarComando(pm2_stop);
+}
+
+
+/**
+ * ejecuto comando
+ * @param comando python a ejecutar
+ */
+function ejecutarComando(comando) {
+  const child = exec(comando);
   // Pasamos los parámetros error, stdout la salida del comando
   child.stdout.on('data', (data) => {
     console.log('stdout: ' + data);

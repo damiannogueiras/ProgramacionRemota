@@ -20,7 +20,7 @@ export class FireAuthService {
 
   constructor(public miAuth: AngularFireAuth,
               public miDB: FireDBService,
-              private dialog: MatDialog,) {
+              private dialog: MatDialog) {
 
     // nos suscribimos a los cambios del estado de la autenticacion
     // de esta manera sabemos si el usuario está logueado o no
@@ -33,7 +33,7 @@ export class FireAuthService {
         }
       },
       err => {
-        console.log(`${err.status} ${err.statusText} (${err.error.message})`, 'Please try again')
+        console.log(`${err.status} ${err.statusText} (${err.error.message})`, 'Please try again');
       });
   }
 
@@ -52,7 +52,7 @@ export class FireAuthService {
           data: {
             tipo: 'Error',
             message: 'Error al autenticar. Ponte en contacto con el administrador.',
-            id:'error'
+            id: 'error'
           }
         });
       });
@@ -67,8 +67,8 @@ export class FireAuthService {
 
   // esta logueado?
   isLogueado(): boolean {
-    //console.log('islog?');
-    //console.log(this.currentUser);
+    // console.log('islog?');
+    // console.log(this.currentUser);
     return (this.currentUser !== null);
     }
 

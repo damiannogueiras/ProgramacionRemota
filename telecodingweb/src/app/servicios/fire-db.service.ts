@@ -8,15 +8,18 @@ import {BehaviorSubject, Observable, Subject} from 'rxjs';
 import {map, switchMap} from 'rxjs/operators';
 import {IUsers} from '../interfaces/users';
 import {IWbs} from '../interfaces/wbs';
+import {IServers} from '../interfaces/servers';
 
 @Injectable({
   providedIn: 'root'
 })
 
-export class FireDBService implements OnInit {
+export class FireDBService {
 
+  servers: Observable<any[]>;
   workbenchs: Observable<any[]>;
   users: Observable<any[]>;
+  user: Observable<any[]>;
   usersList: AngularFireList<any>;
 
   mail$: BehaviorSubject<string | null>;
@@ -24,6 +27,7 @@ export class FireDBService implements OnInit {
   usersItems$: Observable<any[]>;
 
   // arrays con los datos
+  serverArray: IServers[];
   userArray: IUsers[];
   workbenchsArray: IWbs[] = [];
 
@@ -133,33 +137,48 @@ export class FireDBService implements OnInit {
             mail ? ref.orderByChild('mail').equalTo(mail) : ref
         ).valueChanges()
       })
-     */
+    */
+    // guardamos los servers en el array
+    this.miDB.list('servers').snapshotChanges().subscribe(
+      data => {
+        this.serverArray = [];
+        data.forEach(item => {
+          const a = item.payload.toJSON();
+          // @ts-ignore
+          a.$key = item.key;
+          // console.log(item);
+          // console.log(a);
+          this.serverArray.push(a as IServers);
+        });
+        console.log(this.serverArray);
+      }
+    );
 
     // guardamos los workbenchs en el array
     this.miDB.list('workbenchs').snapshotChanges().subscribe(
       data => {
         this.workbenchsArray = [];
         data.forEach(item => {
-          let a = item.payload.toJSON();
-          a['$key'] = item.key;
-          //console.log(item);
-          //console.log(a);
+          const a = item.payload.toJSON();
+          // @ts-ignore
+          a.$key = item.key;
+          // console.log(item);
+          // console.log(a);
           this.workbenchsArray.push(a as IWbs);
-        })
-        //console.log(this.workbenchsArray);
+        });
+        // console.log(this.workbenchsArray);
       }
-    )
+    );
 
-    console.log("Fin del constructor");
+    console.log('Fin del constructor');
   } // fin del constructor
 
-  ngOnInit(): void {
-  }
+
   /**
    * Obtiene toda la informacion del fichero avatarlist.json
    */
   public getAvatar() {
-    //console.log(Math.round(Math.random() * this.avatarList.length) );
+    // console.log(Math.round(Math.random() * this.avatarList.length) );
     return (this.avatarList[Math.round(Math.random() * this.avatarList.length)]);
   }
 
@@ -169,7 +188,10 @@ export class FireDBService implements OnInit {
    */
   altausuario(usuarioNuevoUID: string, usuarioNuevoMail: string, photo: string) {
     // TODO manejar re-entrada sin borrar el banco donde esté
-    this.miDB.object('users/' + usuarioNuevoUID.toString()).update({banco: '', bancoNombre: '', mail: usuarioNuevoMail, photoURL: photo});
+    this.user = this.miDB.list('users/' + usuarioNuevoUID).valueChanges();
+    console.log('Alta usuario?');
+    console.log(this.user);
+    this.miDB.object('users/' + usuarioNuevoUID.toString()).update({banco: '-', bancoNombre: '-', mail: usuarioNuevoMail, photoURL: photo});
     console.log('Insertado uid');
   }
 
@@ -193,8 +215,8 @@ export class FireDBService implements OnInit {
    * @avatar: avatar del peticionario
    */
   enter(banco: string, bancoNombre: string, peticionario: string, email: string, avatar) {
-    this.miDB.object('workbenchs/' + banco).update({userLogueado: email, avatar: avatar, status: 'busy'});
-    this.miDB.object('users/' + peticionario).update({banco: banco, bancoNombre: bancoNombre});
+    this.miDB.object('workbenchs/' + banco).update({userLogueado: email, avatar, status: 'busy'});
+    this.miDB.object('users/' + peticionario).update({banco, bancoNombre});
   }
 
   /**
@@ -202,20 +224,34 @@ export class FireDBService implements OnInit {
    * @param bancoID a resetear
    * @param bancoNombre nombre del banco
    * @param peticionario no procede
-   * @param email del poseedor
-   * @param photo para el avatar
    */
 
   salir(bancoID: string, bancoNombre: string, peticionario: string) {
-    console.log('salir: '+ bancoNombre + ' ' + peticionario);
+    console.log('salir: ' + bancoNombre + ' ' + peticionario);
     console.log(this.workbenchsArray);
-    var index = this.workbenchsArray.findIndex(function(item, i){
-      return item.nombre === bancoNombre
+    const index = this.workbenchsArray.findIndex(function(item, i){
+      return item.nombre === bancoNombre;
     });
     console.log(index);
     this.getAvatar();
-    this.miDB.object('workbenchs/' + bancoID).update({status: 'free', t_remaining: this.workbenchsArray[index].t_total, userLogueado: '', avatar: this.getAvatar()});
-    this.miDB.object('users/' + peticionario).update({banco: '', bancoNombre: ''});
+    this.miDB.object('workbenchs/' + bancoID).update({
+      status: 'free',
+      t_remaining: this.workbenchsArray[index].t_total, userLogueado: '',
+      avatar: this.getAvatar()});
+    this.miDB.object('users/' + peticionario).update({banco: '-', bancoNombre: '-'});
+  }
+
+  /**
+   * devuelve dominio segun el banco
+   * @param id del banco
+   */
+  getDominio(bancoID: string) {
+    // console.log(bancoID.substr(0, 2));
+    const index = this.serverArray.findIndex(function(item, i){
+      // @ts-ignore
+      return item.$key === bancoID.substr(0, 2);
+    });
+    return this.serverArray[index].dominio;
   }
 
   /**
@@ -225,7 +261,7 @@ export class FireDBService implements OnInit {
   getUser(mail: string) {
     return this.miDB.list(
       '/users',
-      ref => ref.orderByChild("mail").equalTo(mail)
+      ref => ref.orderByChild('mail').equalTo(mail)
     ).valueChanges();
     console.log('Filtro por mail: ' + mail);
   }
@@ -236,7 +272,7 @@ export class FireDBService implements OnInit {
    * @return si está en un banco
    */
   isAtWB(mail: string) {
-    var esta = true;
+    const esta = true;
     console.log('¿ ' + mail + ' esta en un banco?');
     /*this.mail$.next(mail);
     this.usersItems$.map*/
