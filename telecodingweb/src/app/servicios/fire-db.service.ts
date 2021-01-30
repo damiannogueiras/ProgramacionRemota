@@ -170,7 +170,7 @@ export class FireDBService {
       }
     );
 
-    console.log('Fin del constructor');
+    // console.log('Fin del constructor');
   } // fin del constructor
 
 
@@ -242,7 +242,7 @@ export class FireDBService {
   }
 
   /**
-   * devuelve dominio segun el banco
+   * devuelve dominio del servidor Express segun el banco
    * @param id del banco
    */
   getDominio(bancoID: string) {
@@ -252,6 +252,18 @@ export class FireDBService {
       return item.$key === bancoID.substr(0, 2);
     });
     return this.serverArray[index].dominio;
+  }
+  /**
+   * devuelve puerto Express segun el banco
+   * @param id del banco
+   */
+  getPortExpress(bancoID: string) {
+    // console.log(bancoID.substr(0, 2));
+    const index = this.serverArray.findIndex(function(item, i){
+      // @ts-ignore
+      return item.$key === bancoID.substr(0, 2);
+    });
+    return this.serverArray[index].portExpress;
   }
 
   /**

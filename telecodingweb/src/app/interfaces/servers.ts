@@ -2,5 +2,7 @@
 
 export interface IServers {
   'dominio': string,
-  'descr': string
+  'descr': string,
+  'portAngular': string,
+  'portExpress': string
 }

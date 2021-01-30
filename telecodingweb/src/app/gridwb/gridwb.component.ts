@@ -43,9 +43,9 @@ export class GridwbComponent {
   solicitud(bancoIDSolicitado, bancoSolicitado, bancoUsuario, bancoUsuarioNombre) {
     console.log('Solicitando banco: ' + bancoSolicitado);
     // recojo dominio
-    // console.log(this.miServDb.getDominio(bancoIDSolicitado));
-    this._dominio = this.miServDb.getDominio(bancoIDSolicitado);
-    this._express = this._dominio + ':' + this._portExpress;
+    this._express = this.miServDb.getDominio(bancoIDSolicitado);
+    this._portExpress = this.miServDb.getPortExpress(bancoIDSolicitado);
+    console.log(this._portExpress);
 
     // comprobamos si esta en un banco
     if (bancoUsuario !== '-') {
@@ -60,13 +60,13 @@ export class GridwbComponent {
     }
     // esta logueado y NO esta en ningun banco
     else {
-      console.log('Logueado y en ningun banco, Autorizado para ' + bancoSolicitado);
+      console.log('Logueado y en ningun banco. Autorizado para ' + bancoSolicitado);
       // peticion al servidor
       const headers = {Authorization: 'Bearer my-token', 'My-Custom-Header': 'foobar'};
-      console.log('Composicion: ' + bancoIDSolicitado.substr(2, bancoIDSolicitado.length));
+      // console.log('Puerto: ' + bancoIDSolicitado.substr(2, bancoIDSolicitado.length));
       this._portBanco = bancoIDSolicitado.substr(2, bancoIDSolicitado.length);
-      this._urlBanco = this._dominio + ':' + this._portBanco;
-      this.http.get<any>('http://' + this._express + '/solicitud/?bancoid=' + bancoIDSolicitado + '&user="' + this.miServAuth.getEmail() + '"',
+      this._urlBanco = this._express + ':' + this._portBanco;
+      this.http.get<any>('http://' + this._express + ':' + this._portExpress + '/solicitud/?bancoid=' + bancoIDSolicitado + '&user=' + this.miServAuth.getEmail(),
         {headers}).subscribe(
         data => {
           console.log('Respuesta express:');
@@ -95,7 +95,7 @@ export class GridwbComponent {
           this.dialog.open(MessageComponent, {
             data: {
               tipo: 'Error',
-              message: 'Error al intentar habilitar banco',
+              message: 'Error al intentar lenvantar banco',
               id: 'error'
             }
           });
@@ -111,12 +111,11 @@ export class GridwbComponent {
    */
   salir(bancoID, bancoNombreSolicitado) {
     // recojo dominio
-    // console.log(this.miServDb.getDominio(bancoID));
-    this._dominio = this.miServDb.getDominio(bancoID);
-    this._express = this._dominio + ':' + this._portExpress;
+    this._express = this.miServDb.getDominio(bancoID);
+    this._portExpress = this.miServDb.getPortExpress(bancoID);
 
     this.miServDb.salir(bancoID, bancoNombreSolicitado, this.miServAuth.getUID());
-    this.http.get<string>('http://' + this._express + '/cierre/' + bancoID).subscribe(
+    this.http.get<string>('http://' + this._express + ':' + this._portExpress + '/cierre/' + bancoID).subscribe(
       data => {
         console.log('Respuesta express:');
         console.log(data);

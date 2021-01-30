@@ -2,7 +2,7 @@
  *    Server side Express
  *
  *    Ejecutarlo con nodemon para actualizar cambios automaticamente
- *    node ./node_modules/nodemon/bin/nodemon.js express/app.js
+ *    node ./node_modules/nodemon/bin/nodemon.js express/server.js
  */
 
 "use strict";
@@ -12,7 +12,7 @@ const servidor = express();
 const compression = require("compression");
 // puerto del express
 const _port = 4100;
-const _dominio = "192.168.1.43";
+const _dominio = "programacionremota.danielcastelao.org";
 const _homeNodesRED = '/home/pi/ProgramacionRemota/node-red';
 
 // usamos cors para permitir peticiones desde el angular
@@ -62,13 +62,19 @@ function levantarNodeRED(bancoID, user) {
    * -s setting de node-red
    * -p port
    * -u user dir (utilizamos email del usuario)
+   * -
    */
-  let pm2_start = '';
   // script
+  let pm2_start = '';
+  // puerto
   let argsNodeRED = ' -p ' + bancoID.substr(2, bancoID.length);
   // user home
-  argsNodeRED = argsNodeRED + ' -u ' + _homeNodesRED + '/' + bancoID + '/users/' + user;
-  //argsNodeRED = argsNodeRED + ' flow' + bancoID + '.json';
+  let userName = user.substr(0, user.indexOf('@'));
+  argsNodeRED = argsNodeRED + ' -u ' + _homeNodesRED + '/' + bancoID + '/users/' + userName;
+  // fichero setting, contiene ruta de otros nodes y otros parametros
+  argsNodeRED = argsNodeRED + ' -s ' + _homeNodesRED + '/' + bancoID + '/settings.js';
+  // nodo inicial
+  // argsNodeRED = argsNodeRED + ' flow' + bancoID + '.json';
   console.log(argsNodeRED);
   pm2_start = 'pm2 start node-red --watch --name ' + bancoID + ' -- ' + argsNodeRED;
   ejecutarComando(pm2_start);
@@ -85,7 +91,6 @@ function stopNodeRED(bancoID){
   pm2_stop = 'pm2 delete ' + bancoID;
   ejecutarComando(pm2_stop);
 }
-
 
 /**
  * ejecuto comando
