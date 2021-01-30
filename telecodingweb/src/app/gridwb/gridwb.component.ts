@@ -20,8 +20,8 @@ import {FireDBService} from '../servicios/fire-db.service';
 export class GridwbComponent {
   // tslint:disable:variable-name
   private _express = '';
+  // default port
   private _portExpress = '4100';
-  private _dominio = '';
   private _portBanco: string;
   private _urlBanco: string;
 
@@ -66,28 +66,37 @@ export class GridwbComponent {
       // console.log('Puerto: ' + bancoIDSolicitado.substr(2, bancoIDSolicitado.length));
       this._portBanco = bancoIDSolicitado.substr(2, bancoIDSolicitado.length);
       this._urlBanco = this._express + ':' + this._portBanco;
-      this.http.get<any>('http://' + this._express + ':' + this._portExpress + '/solicitud/?bancoid=' + bancoIDSolicitado + '&user=' + this.miServAuth.getEmail(),
+      const _urlPeticion = 'http://' + this._express + ':' + this._portExpress +
+        '/solicitud/?bancoid=' + bancoIDSolicitado +
+        '&banconombre=' + bancoSolicitado +
+        '&user=' + this.miServAuth.getEmail() +
+        '&avatar=' + this.miServAuth.getPhoto() +
+        '&uid=' + this.miServAuth.getUID();
+      // console.log(_urlPeticion);
+      this.http.get<any>(_urlPeticion,
         {headers}).subscribe(
         data => {
-          console.log('Respuesta express:');
-          console.log(data);
-          this.miServDb.enter(
+          console.log('Respuesta express: ' + data.code);
+          // code = 0 es ejecución correcta
+          if (data.code == 0){
+            this.dialog.open(MessageComponent, {
+              data: {
+                tipo: 'Info',
+                message:
+                // problemas con unsafe URL
+                // '<a target="_blank" href="' + this._urlBanco + '">' + bancoSolicitado + '</a>',
+                  'Puedes abrir el banco:' + bancoSolicitado + ' en http://' + this._urlBanco,
+                id: 'puedes'
+              }
+            });
+          }
+          /*Realizamos esta tarea en el express
+            this.miServDb.enter(
             bancoIDSolicitado,
             bancoSolicitado,
             this.miServAuth.getUID(),
             this.miServAuth.getEmail(),
-            this.miServAuth.getPhoto());
-
-          this.dialog.open(MessageComponent, {
-            data: {
-              tipo: 'Info',
-              message:
-                // problemas con unsafe URL
-                // '<a target="_blank" href="' + this._urlBanco + '">' + bancoSolicitado + '</a>',
-                'Puedes abrir el banco:' + bancoSolicitado + ' en http://' + this._urlBanco,
-              id: 'puedes'
-            }
-          });
+            this.miServAuth.getPhoto());*/
         },
         // error cuando el servidor intentó levantar el banco
         error => {
@@ -115,10 +124,9 @@ export class GridwbComponent {
     this._portExpress = this.miServDb.getPortExpress(bancoID);
 
     this.miServDb.salir(bancoID, bancoNombreSolicitado, this.miServAuth.getUID());
-    this.http.get<string>('http://' + this._express + ':' + this._portExpress + '/cierre/' + bancoID).subscribe(
+    this.http.get<any>('http://' + this._express + ':' + this._portExpress + '/cierre/' + bancoID).subscribe(
       data => {
-        console.log('Respuesta express:');
-        console.log(data);
+        console.log('Respuesta express:' + data.code);
       },
       error => {
         console.error('Error al cerrar banco', error);

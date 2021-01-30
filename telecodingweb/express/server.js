@@ -28,18 +28,37 @@ servidor.use(compression());
 
 // modulo child_process para ejecutar comandos del sistema
 var exec = require('child_process').exec;
+var spawnSync = require('child_process').spawnSync;
+let _code = ''; // respuesta del comando
+
+var admin = require("firebase-admin");
+/**
+ * Utilizamos la service account para entornos de servidores
+ * https://console.cloud.google.com/iam-admin/serviceaccounts/details/112294775774598014073?authuser=0&project=programacionremota
+ */
+var serviceAccount = require("./programacionremota-9f71ccbf2365.json");
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount),
+  databaseURL: "https://programacionremota.firebaseio.com"
+});
+
+// Get a database reference
+var db = admin.database();
+// ruta de los servers
+var refServers = db.ref("servers");
+var refWorkbenchs = db.ref("workbenchs");
+var refUsers = db.ref("users");
 
 // Rutas
 // ---- SOLICITUD DE PUESTA EN MARCHA DE UN BANCO DE TRABAJO ---- //
+// req.query.banconombre
 servidor.get("/solicitud", cors(corsOptions), (req, res) => {
-  levantarNodeRED(req.query.bancoid, req.query.user);
-  res.send("{\"Listo\":1}");
+  levantarNodeRED(req.query.bancoid, req.query.banconombre, req.query.uid, req.query.user, req.query.avatar, res);
 });
 
 // ---- SOLICITUD DE CIERRE DUN BANCO DE TRABAJO ---- //
 servidor.get("/cierre/:id", cors(corsOptions), (req, res) => {
-  stopNodeRED(req.params.id);
-  res.send("{\"Listo\":0}");
+  stopNodeRED(req.params.id, res);
 });
 
 // escucha del servidor
@@ -50,9 +69,28 @@ servidor.listen(_port, "0.0.0.0", () => {
 /**
  * Ejecuta comandos para levantar instancia de node-RED
  * @param bancoID banco de trabajo, instancia de node-RED
+ * @param bancoNombre nombre del banco de trabajo
+ * @param uid del usuario que solicita
+ * @email del usuario
+ * @avatar del usuario
  */
-function levantarNodeRED(bancoID, user) {
-  console.log("Start " + bancoID + " de " + user);
+function levantarNodeRED(bancoID, bancoNombre, uid, email, avatar, res) {
+  console.log("Start " + bancoID + " de " + email);
+
+  /* actualiza datos en firebase */
+  refWorkbenchs.child(bancoID).update(
+    {
+        userLogueado: email,
+        avatar: avatar,
+        status: 'busy'
+    }
+  );
+  refUsers.child(uid).update(
+    {
+      'banco': bancoID,
+      'bancoNombre': bancoNombre
+    }
+  )
 
   /* comando para ejecutar node-red con pm2
    * pm2 start script
@@ -69,7 +107,7 @@ function levantarNodeRED(bancoID, user) {
   // puerto
   let argsNodeRED = ' -p ' + bancoID.substr(2, bancoID.length);
   // user home
-  let userName = user.substr(0, user.indexOf('@'));
+  let userName = email.substr(0, email.indexOf('@'));
   argsNodeRED = argsNodeRED + ' -u ' + _homeNodesRED + '/' + bancoID + '/users/' + userName;
   // fichero setting, contiene ruta de otros nodes y otros parametros
   argsNodeRED = argsNodeRED + ' -s ' + _homeNodesRED + '/' + bancoID + '/settings.js';
@@ -77,19 +115,21 @@ function levantarNodeRED(bancoID, user) {
   // argsNodeRED = argsNodeRED + ' flow' + bancoID + '.json';
   console.log(argsNodeRED);
   pm2_start = 'pm2 start node-red --watch --name ' + bancoID + ' -- ' + argsNodeRED;
-  ejecutarComando(pm2_start);
+  _code = ejecutarComando(pm2_start);
+  res.send("{\"code\":" + _code + "}");
 }
 
 /**
  * Ejecuta comandos para parar instancia de node-RED
  * @param bancoID banco de trabajo, instancia de node-RED
+ * @res para mandar la respuesta a Angular
  */
-function stopNodeRED(bancoID){
-  console.log("Delete " + bancoID);
+function stopNodeRED(bancoID, res){
   // comando a ejecutar
-  let pm2_stop;
-  pm2_stop = 'pm2 delete ' + bancoID;
-  ejecutarComando(pm2_stop);
+  let pm2_stop = 'pm2 delete ' + bancoID;
+  _code = ejecutarComando(pm2_stop);
+  console.log("Delete " + bancoID + ", code devuelto: " + _code);
+  res.send("{\"code\":" + _code + "}");
 }
 
 /**
@@ -97,17 +137,8 @@ function stopNodeRED(bancoID){
  * @param comando python a ejecutar
  */
 function ejecutarComando(comando) {
-  const child = exec(comando);
-  // Pasamos los parámetros error, stdout la salida del comando
-  child.stdout.on('data', (data) => {
-    console.log('stdout: ' + data);
-  });
-
-  child.stderr.on('data', (data) => {
-    console.error('stderr: ' + data);
-  });
-
-  child.on('close', (code) => {
-    console.log('child process exited with code ' + code);
-  });
+  let options = {shell: true};
+  const ret = spawnSync(comando, null, options);
+  console.log(ret.output.toString());
+  return ret.status;
 }

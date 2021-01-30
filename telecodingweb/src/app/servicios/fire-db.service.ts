@@ -214,10 +214,11 @@ export class FireDBService {
    * @email: del peticionario
    * @avatar: avatar del peticionario
    */
-  enter(banco: string, bancoNombre: string, peticionario: string, email: string, avatar) {
-    this.miDB.object('workbenchs/' + banco).update({userLogueado: email, avatar, status: 'busy'});
-    this.miDB.object('users/' + peticionario).update({banco, bancoNombre});
-  }
+  /* lo haremos en express
+    enter(banco: string, bancoNombre: string, peticionario: string, email: string, avatar) {
+      this.miDB.object('workbenchs/' + banco).update({userLogueado: email, avatar, status: 'busy'});
+      this.miDB.object('users/' + peticionario).update({banco, bancoNombre});
+  }*/
 
   /**
    * salir de un banco, resetearlo
