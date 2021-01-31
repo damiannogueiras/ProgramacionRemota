@@ -52,13 +52,15 @@ var refUsers = db.ref("users");
 // Rutas
 // ---- SOLICITUD DE PUESTA EN MARCHA DE UN BANCO DE TRABAJO ---- //
 // req.query.banconombre
-servidor.get("/solicitud", cors(corsOptions), (req, res) => {
-  levantarNodeRED(req.query.bancoid, req.query.banconombre, req.query.uid, req.query.user, req.query.avatar, res);
+servidor.get("/solicitud", cors(corsOptions), async (req, res) => {
+  const result = await levantarNodeRED(req.query.bancoid, req.query.banconombre, req.query.uid, req.query.user, req.query.avatar);
+  res.send("{\"code\":" + result + "}");
 });
 
 // ---- SOLICITUD DE CIERRE DUN BANCO DE TRABAJO ---- //
-servidor.get("/cierre/:id", cors(corsOptions), (req, res) => {
-  stopNodeRED(req.params.id, res);
+servidor.get("/cierre/:id", cors(corsOptions), async (req, res) => {
+  const result = await stopNodeRED(req.params.id);
+  res.send("{\"code\":" + result + "}");
 });
 
 // escucha del servidor
@@ -74,7 +76,7 @@ servidor.listen(_port, "0.0.0.0", () => {
  * @email del usuario
  * @avatar del usuario
  */
-function levantarNodeRED(bancoID, bancoNombre, uid, email, avatar, res) {
+function levantarNodeRED(bancoID, bancoNombre, uid, email, avatar) {
   console.log("Start " + bancoID + " de " + email);
 
   /* actualiza datos en firebase */
@@ -115,21 +117,19 @@ function levantarNodeRED(bancoID, bancoNombre, uid, email, avatar, res) {
   // argsNodeRED = argsNodeRED + ' flow' + bancoID + '.json';
   console.log(argsNodeRED);
   pm2_start = 'pm2 start node-red --watch --name ' + bancoID + ' -- ' + argsNodeRED;
-  _code = ejecutarComando(pm2_start);
-  res.send("{\"code\":" + _code + "}");
+  return ejecutarComando(pm2_start);
 }
 
 /**
  * Ejecuta comandos para parar instancia de node-RED
  * @param bancoID banco de trabajo, instancia de node-RED
- * @res para mandar la respuesta a Angular
  */
-function stopNodeRED(bancoID, res){
+function stopNodeRED(bancoID){
   // comando a ejecutar
   let pm2_stop = 'pm2 delete ' + bancoID;
-  _code = ejecutarComando(pm2_stop);
-  console.log("Delete " + bancoID + ", code devuelto: " + _code);
-  res.send("{\"code\":" + _code + "}");
+  console.log("Delete " + bancoID);
+  return ejecutarComando(pm2_stop);
+
 }
 
 /**
