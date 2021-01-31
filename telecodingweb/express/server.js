@@ -8,63 +8,49 @@
 "use strict";
 // servidor express
 const express = require("express");
-const servidor = express();
+const servidorExpress = express();
 const compression = require("compression");
 // puerto del express
 const _port = 4100;
 const _dominio = "programacionremota.danielcastelao.org";
 const _homeNodesRED = '/home/pi/ProgramacionRemota/node-red';
-
 // usamos cors para permitir peticiones desde el angular
 var cors = require('cors');
-servidor.use(cors());
+servidorExpress.use(cors());
 var corsOptions = {
   origin: 'http://' + _dominio + ':4200',
   optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
 }
-
 // comprimir encabezados
-servidor.use(compression());
+servidorExpress.use(compression());
 
 // modulo child_process para ejecutar comandos del sistema
-var exec = require('child_process').exec;
 var spawnSync = require('child_process').spawnSync;
-let _code = ''; // respuesta del comando
 
 var admin = require("firebase-admin");
 /**
  * Utilizamos la service account para entornos de servidores
  * https://console.cloud.google.com/iam-admin/serviceaccounts/details/112294775774598014073?authuser=0&project=programacionremota
  */
-var serviceAccount = require("./programacionremota-9f71ccbf2365.json");
-admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount),
-  databaseURL: "https://programacionremota.firebaseio.com"
-});
+var serviceAccount = require("./environments/programacionremota-9f71ccbf2365.json");
 
-// Get a database reference
-var db = admin.database();
-// ruta de los servers
-var refServers = db.ref("servers");
-var refWorkbenchs = db.ref("workbenchs");
-var refUsers = db.ref("users");
+var db = require("./services/db-servers.js");
 
 // Rutas
 // ---- SOLICITUD DE PUESTA EN MARCHA DE UN BANCO DE TRABAJO ---- //
-// req.query.banconombre
-servidor.get("/solicitud", cors(corsOptions), async (req, res) => {
+servidorExpress.get("/solicitud", cors(corsOptions), async (req, res) => {
   const result = await levantarNodeRED(req.query.bancoid, req.query.banconombre, req.query.uid, req.query.user, req.query.avatar);
   res.send("{\"code\":" + result + "}");
 });
 
 // ---- SOLICITUD DE CIERRE DUN BANCO DE TRABAJO ---- //
-servidor.get("/cierre/:id", cors(corsOptions), async (req, res) => {
+servidorExpress.get("/cierre/:id", cors(corsOptions), async (req, res) => {
   const result = await stopNodeRED(req.params.id);
   res.send("{\"code\":" + result + "}");
 });
 
 // escucha del servidor
-servidor.listen(_port, "0.0.0.0", () => {
+servidorExpress.listen(_port, "0.0.0.0", () => {
   console.log("Servidor corriendo " + _port)
 });
 
@@ -78,21 +64,24 @@ servidor.listen(_port, "0.0.0.0", () => {
  */
 function levantarNodeRED(bancoID, bancoNombre, uid, email, avatar) {
   console.log("Start " + bancoID + " de " + email);
-
-  /* actualiza datos en firebase */
-  refWorkbenchs.child(bancoID).update(
-    {
-        userLogueado: email,
-        avatar: avatar,
-        status: 'busy'
+  let serverActual = bancoID.substr(0,2);
+  // comprobamos que no es un workbench, solo instancia nodered
+  if (bancoID == "AA2000") {
+    // comprobamos que hay puertos libres
+    if (db.getMaxInst(serverActual) > db.getNroInst(serverActual)) {
+      // levantar instancia nodered
+      // sumo uno a las instancias
+      db.actualizoNroInst(serverActual, db.getNroInst(serverActual) + 1);
+      console.log("levanto nodered")
+    } else {
+     console.log("tienes que esperar");
     }
-  );
-  refUsers.child(uid).update(
-    {
-      'banco': bancoID,
-      'bancoNombre': bancoNombre
-    }
-  )
+  } else {
+    console.log("no es nodered ");
+  }
+  // TODO incluir esto en el if anterior
+  db.actualizarWB(bancoID, email, avatar, "busy");
+  db.actualizarUser(uid, bancoID, bancoNombre);
 
   /* comando para ejecutar node-red con pm2
    * pm2 start script
