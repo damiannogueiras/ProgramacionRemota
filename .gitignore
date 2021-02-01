@@ -1,0 +1,16 @@
+serve*.orig
+telecoding/src/environments
+telecoding/angular.json
+telecoding/package.json
+express/environments/*.json
+telecodingweb/express/probas.js
+ProgramacionRemota.wiki/
+node-red/
+python/
+telecodingweb/dist/
+telecodingweb/e2e/
+telecodingweb/express/environments/
+telecodingweb/node_modules/
+telecodingweb/package-lock.json
+telecodingweb/package-lock.json.imac
+telecodingweb/package.json.imac
