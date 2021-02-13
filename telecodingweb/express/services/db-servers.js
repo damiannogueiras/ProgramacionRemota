@@ -4,9 +4,6 @@
  */
 var admin = require("firebase-admin");
 var serviceAccount = require("../environments/programacionremota-9f71ccbf2365.json");
-var servidores;// = require("../interfaces/server.js");
-var wbs = require("../interfaces/wbs.js");
-var users = require("../interfaces/users.js");
 
 // inicializamos la base de datos
 admin.initializeApp({
@@ -18,7 +15,6 @@ admin.initializeApp({
 var db = admin.database();
 // ruta de los servers
 var refServers = db.ref("servers");
-//var AARef = refServers.child("AA");
 // ruta a los wbs
 var refWbs = db.ref("workbenchs");
 // ruta a los users
@@ -29,6 +25,14 @@ var refUsers = db.ref("users");
 refServers.on("value", function(snapshot) {
   servidores = snapshot.val();
   //console.log(servidores);
+
+}, function (errorObject) {
+  console.log("La lectura servidores realtime fallo: " + errorObject.code);
+});
+// Actualizacion de los puertos libres
+refServers.child("AA").child("portsWBNode").on("value", function(snapshot) {
+  portsWBNode = snapshot.val();
+  //console.log(portsWBNode);
 }, function (errorObject) {
   console.log("La lectura servidores realtime fallo: " + errorObject.code);
 });
@@ -48,22 +52,28 @@ refUsers.on("value", function(snapshot) {
 
 /**
  * Acceso a servidores
- * @param nuevo
+ * @param nuevo formato json de lo que queremos actualizar
  */
-const actualizoNroInst = (serverActual, nuevo) => {
-  console.log("Server Actual: " + serverActual);
-  refServers.child(serverActual).update({nroInst: nuevo});
+const actualizoServer = (serverActual, nuevo) => {
+  console.log("Actualizo Server Actual: " + serverActual.toString());
+  console.log("con " + nuevo.toString());
+  refServers.child(serverActual).update(nuevo);
 }
+exports.actualizoServer = actualizoServer;
+
+/**
+ * Devuelve el nro instancias actuales y el maximo
+ * @param serverActual
+ * @return {*}
+ */
 const getNroInst = (serverActual) => {
   return servidores[serverActual].nroInst;
 };
+exports.getNroInst = getNroInst;
 const getMaxInst = (serverActual) => {
   return servidores[serverActual].maxInst;
 };
-
-exports.getNroInst = getNroInst;
 exports.getMaxInst = getMaxInst;
-exports.actualizoNroInst = actualizoNroInst;
 
 /**
  * Acceso a WB
@@ -80,7 +90,31 @@ const actualizarWB = (bancoID, email, avatar, status) => {
 exports.actualizarWB = actualizarWB;
 
 /**
- * Acceso a users
+ * crear a WB
+ * TODO copiar de una plantilla, por ej del AA2000
+ */
+const crearWB = (bancoID, email, avatar, status) => {
+  refWbs.child(bancoID).update(
+    {
+      UD: 'https://nodered.org/docs/tutorials/first-flow',
+      avatar: avatar,
+      components: 'node-red',
+      userLogueado: email,
+      descr: '<p>Banco nodered ocupado</p>',
+      pass: 1234,
+      photo: 'https://firebasestorage.googleapis.com/v0/b/programacionremota.appspot.com/o/imagenes%2FAA00.png?alt=media&token=6242714d-6649-4470-8ba5-11f1aa620497',
+      status: 'busy',
+      t_remaining: 120,
+      t_total: 120,
+      userLogueado: '',
+      userNodeRED: 'yoda',
+    }
+  );
+};
+exports.crearWB = crearWB;
+
+/**
+ * Actualizo datos del user
  */
 const actualizarUser = (uid, bancoID, bancoNombre) => {
   refUsers.child(uid).update(
@@ -92,3 +126,28 @@ const actualizarUser = (uid, bancoID, bancoNombre) => {
 };
 exports.actualizarUser = actualizarUser;
 
+/**
+ * Busca el primer puerto libre que es el primer cero que encuentre
+ * @return indice del primer puerto libre
+ */
+const getPrimeroLibre = () => {
+  console.log("Primero libre:" + portsWBNode.indexOf(0));
+  return portsWBNode.indexOf(0);
+}
+exports.getPrimeroLibre = getPrimeroLibre;
+
+/**
+ * rellena con 1 el puerto levantado
+ *
+ */
+const setPuerto = (serverActual, puerto) => {
+  console.log("Puerto a 1: " + puerto);
+  let indice = puerto - 2000;
+  portsWBNode[indice] = 1;
+  //var nuevopuerto = "{" + indice + ": 1}";
+  //nuevopuerto = JSON.parse(nuevopuerto);
+  //console.log(nuevopuerto);
+  refServers.child(serverActual).child("portsWBNode").set(portsWBNode);
+  console.log(portsWBNode);
+}
+exports.setPuerto = setPuerto;

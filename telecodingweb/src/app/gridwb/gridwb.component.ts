@@ -45,7 +45,7 @@ export class GridwbComponent {
     // recojo dominio
     this._express = this.miServDb.getDominio(bancoIDSolicitado);
     this._portExpress = this.miServDb.getPortExpress(bancoIDSolicitado);
-    console.log(this._portExpress);
+    //console.log(this._portExpress);
 
     // comprobamos si esta en un banco
     if (bancoUsuario !== '-') {
@@ -65,7 +65,6 @@ export class GridwbComponent {
       const headers = {Authorization: 'Bearer my-token', 'My-Custom-Header': 'foobar'};
       // console.log('Puerto: ' + bancoIDSolicitado.substr(2, bancoIDSolicitado.length));
       this._portBanco = bancoIDSolicitado.substr(2, bancoIDSolicitado.length);
-      this._urlBanco = this._express + ':' + this._portBanco;
       const _urlPeticion = 'http://' + this._express + ':' + this._portExpress +
         '/solicitud/?bancoid=' + bancoIDSolicitado +
         '&banconombre=' + bancoSolicitado +
@@ -76,7 +75,7 @@ export class GridwbComponent {
       this.http.get<any>(_urlPeticion,
         {headers}).subscribe(
         data => {
-          console.log('Respuesta express: ' + data.code);
+          console.log('Respuesta express: ' + data.code + ', ' + data.puerto);
           // code = 0 es ejecución correcta
           if (data.code == 0){
             this.dialog.open(MessageComponent, {
@@ -85,7 +84,7 @@ export class GridwbComponent {
                 message:
                 // problemas con unsafe URL
                 // '<a target="_blank" href="' + this._urlBanco + '">' + bancoSolicitado + '</a>',
-                  'Puedes abrir el banco:' + bancoSolicitado + ' en http://' + this._urlBanco,
+                  '<p>Puedes abrir el banco: ' + bancoSolicitado + '</p></p>http://' + this._express + ':' + data.puerto + '</p>',
                 id: 'puedes'
               }
             });

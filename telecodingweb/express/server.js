@@ -12,8 +12,12 @@ const servidorExpress = express();
 const compression = require("compression");
 // puerto del express
 const _port = 4100;
+// puerto del primer banco de nodered
+const _portFirstNode = 2000;
 const _dominio = "programacionremota.danielcastelao.org";
 const _homeNodesRED = '/home/pi/ProgramacionRemota/node-red';
+// puerto del workbench
+var puertoWB = 0;
 // usamos cors para permitir peticiones desde el angular
 var cors = require('cors');
 servidorExpress.use(cors());
@@ -28,11 +32,6 @@ servidorExpress.use(compression());
 var spawnSync = require('child_process').spawnSync;
 
 var admin = require("firebase-admin");
-/**
- * Utilizamos la service account para entornos de servidores
- * https://console.cloud.google.com/iam-admin/serviceaccounts/details/112294775774598014073?authuser=0&project=programacionremota
- */
-var serviceAccount = require("./environments/programacionremota-9f71ccbf2365.json");
 
 var db = require("./services/db-servers.js");
 
@@ -40,7 +39,7 @@ var db = require("./services/db-servers.js");
 // ---- SOLICITUD DE PUESTA EN MARCHA DE UN BANCO DE TRABAJO ---- //
 servidorExpress.get("/solicitud", cors(corsOptions), async (req, res) => {
   const result = await levantarNodeRED(req.query.bancoid, req.query.banconombre, req.query.uid, req.query.user, req.query.avatar);
-  res.send("{\"code\":" + result + "}");
+  res.send("{\"code\":" + result + ", \"puerto\":" + puertoWB + " }");
 });
 
 // ---- SOLICITUD DE CIERRE DUN BANCO DE TRABAJO ---- //
@@ -63,6 +62,7 @@ servidorExpress.listen(_port, "0.0.0.0", () => {
  * @avatar del usuario
  */
 function levantarNodeRED(bancoID, bancoNombre, uid, email, avatar) {
+  let nombreInstancia = "nombreInstancia";
   console.log("Start " + bancoID + " de " + email);
   let serverActual = bancoID.substr(0,2);
   // comprobamos que no es un workbench, solo instancia nodered
@@ -70,18 +70,33 @@ function levantarNodeRED(bancoID, bancoNombre, uid, email, avatar) {
     // comprobamos que hay puertos libres
     if (db.getMaxInst(serverActual) > db.getNroInst(serverActual)) {
       // levantar instancia nodered
+      // busco puerto libre y le suma el inicial
+      // TODO si hay error o no lo encuentra getPrimeroLibre devuelve -1
+      puertoWB = db.getPrimeroLibre() + _portFirstNode;
       // sumo uno a las instancias
-      db.actualizoNroInst(serverActual, db.getNroInst(serverActual) + 1);
-      console.log("levanto nodered")
+      let unomas = db.getNroInst(serverActual) + 1;
+      let nuevovalor = {nroInst: unomas};
+      db.actualizoServer(serverActual, nuevovalor);
+      // actualizar el puerto que elijo
+      db.setPuerto(serverActual, puertoWB);
+      // actualizo id para crear nuevo workbench en firebase
+      let bancoIDnuevo = serverActual + puertoWB;
+      nombreInstancia = bancoIDnuevo;
+      // creo nuevo WB
+      db.crearWB(bancoIDnuevo, email, avatar, "busy");
+      db.actualizarUser(uid, bancoIDnuevo, bancoNombre);
+      console.log("levanto nodered");
     } else {
      console.log("tienes que esperar");
     }
   } else {
-    console.log("no es nodered ");
+    console.log("no es nodered");
+    nombreInstancia = bancoID;
+    puertoWB = bancoID.substr(2, bancoID.length);
+    db.actualizarWB(bancoID, email, avatar, "busy");
+    db.actualizarUser(uid, bancoID, bancoNombre);
   }
-  // TODO incluir esto en el if anterior
-  db.actualizarWB(bancoID, email, avatar, "busy");
-  db.actualizarUser(uid, bancoID, bancoNombre);
+
 
   /* comando para ejecutar node-red con pm2
    * pm2 start script
@@ -96,7 +111,7 @@ function levantarNodeRED(bancoID, bancoNombre, uid, email, avatar) {
   // script
   let pm2_start = '';
   // puerto
-  let argsNodeRED = ' -p ' + bancoID.substr(2, bancoID.length);
+  let argsNodeRED = ' -p ' + puertoWB;
   // user home
   let userName = email.substr(0, email.indexOf('@'));
   argsNodeRED = argsNodeRED + ' -u ' + _homeNodesRED + '/' + bancoID + '/users/' + userName;
@@ -104,8 +119,8 @@ function levantarNodeRED(bancoID, bancoNombre, uid, email, avatar) {
   argsNodeRED = argsNodeRED + ' -s ' + _homeNodesRED + '/' + bancoID + '/settings.js';
   // nodo inicial
   // argsNodeRED = argsNodeRED + ' flow' + bancoID + '.json';
-  console.log(argsNodeRED);
-  pm2_start = 'pm2 start node-red --watch --name ' + bancoID + ' -- ' + argsNodeRED;
+  pm2_start = 'pm2 start node-red --name ' + nombreInstancia + ' -- ' + argsNodeRED;
+  console.log(pm2_start);
   return ejecutarComando(pm2_start);
 }
 
