@@ -18,13 +18,14 @@
           <div mat-card-avatar style="padding: 5px"><img mat-card-image width="50px" class="circular"
                                                          src="{{workbench.payload.val().avatar}}"></div>
           <mat-card-title class="mat-card-title">
-            <span class="md-headline">{{workbench.payload.val().nombre}} ({{workbench.payload.val().t_total}}min)</span>
+            <span class="md-headline">{{workbench.payload.val().nombre}}</span>
           </mat-card-title>
           <mat-card-subtitle><span class="md-headline">{{workbench.payload.val().components}}</span></mat-card-subtitle>
         </mat-card-header>
         <img class="card-picture" mat-card-image [src]="workbench.payload.val().photo">
         <mat-card-content>
           <p [innerHTML]="workbench.payload.val().descr"></p>
+          <p>Disponibiliad: {{workbench.payload.val().t_total}}min</p>
           <!-- debug
           <p>{{workbench | json}}</p>
           <code>{{workbench.payload.key}}</code>
@@ -46,13 +47,18 @@
                 alarm_on
               </mat-icon>
             </button>
-            <!-- para resetear el banco SOLO para uso mientras se desarrolla, en produccion no existe -->
-                <button class="mat-icon-button fondo" (click)="salir(workbench.payload.key, workbench.payload.val().nombre)" >
-                  <mat-icon matTooltip="resetear workbench" color="warn"
+            <!-- para salir del banco antes de tiempo -->
+            <!-- TODO solo puede salir el usuario que entro
+            *ngIf="(user.payload.val().nombre == workbench.payload.key)"
+            <ng-container *ngFor="let user of miServDb.users | async"> -->
+                <button class="mat-icon-button fondo" (click)="salir(workbench.payload.key)" >
+                  <mat-icon matTooltip="salir workbench" color="warn"
                             class="mat-icon notranslate material-icons mat-icon-no-color">
                     clear
                   </mat-icon>
                 </button>
+            <!--</ng-container>-->
+
           </span>
           <!-- Libre -->
           <ng-template #elseBusy>
@@ -71,7 +77,6 @@
             <ng-template #elseLogueado>
               <ng-container *ngFor="let user of miServDb.users | async">
               <button class="mat-icon-button fondo" *ngIf="user.payload.val().mail == miServAuth.getEmail()">
-
                   <mat-icon matTooltip="Libre" color="primary"
                             class="mat-icon notranslate material-icons mat-icon-no-color"
                             (click)="this.solicitud(workbench.payload.key, workbench.payload.val().nombre, user.payload.val().banco, user.payload.val().bancoNombre)">

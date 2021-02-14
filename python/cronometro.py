@@ -92,7 +92,7 @@ avatarList = [
     'http://ssl.gstatic.com/docs/common/profile/walrus_lg.png',
     'http://ssl.gstatic.com/docs/common/profile/wolverine_lg.png',
     'http://ssl.gstatic.com/docs/common/profile/wombat_lg.png'
-];
+]
 # generamos indice aleatorio para el avatar
 seed()
 index_random = randint(0, avatarList.__len__())

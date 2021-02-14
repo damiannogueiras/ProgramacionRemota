@@ -31,8 +31,6 @@ servidorExpress.use(compression());
 // modulo child_process para ejecutar comandos del sistema
 var spawnSync = require('child_process').spawnSync;
 
-var admin = require("firebase-admin");
-
 var db = require("./services/db-servers.js");
 
 // Rutas
@@ -43,8 +41,8 @@ servidorExpress.get("/solicitud", cors(corsOptions), async (req, res) => {
 });
 
 // ---- SOLICITUD DE CIERRE DUN BANCO DE TRABAJO ---- //
-servidorExpress.get("/cierre/:id", cors(corsOptions), async (req, res) => {
-  const result = await stopNodeRED(req.params.id);
+servidorExpress.get("/cierre", cors(corsOptions), async (req, res) => {
+  const result = await stopNodeRED(req.query.uid, req.query.bancoid);
   res.send("{\"code\":" + result + "}");
 });
 
@@ -126,13 +124,26 @@ function levantarNodeRED(bancoID, bancoNombre, uid, email, avatar) {
 
 /**
  * Ejecuta comandos para parar instancia de node-RED
+ * Comprueba que el usuario que solicita es el que está en el banco
+ * @param UID key del usuario que solicita el cierre
  * @param bancoID banco de trabajo, instancia de node-RED
  */
-function stopNodeRED(bancoID){
-  // comando a ejecutar
-  let pm2_stop = 'pm2 delete ' + bancoID;
-  console.log("Delete " + bancoID);
-  return ejecutarComando(pm2_stop);
+function stopNodeRED(UID, bancoID){
+  console.log("Delete " + bancoID + " ocupado por " + UID);
+  // comprobamos que el usuario esta usando el banco
+  if(bancoID == db.getWBbyUID(UID)){
+    // comando a ejecutar
+    let pm2_stop = 'pm2 delete ' + bancoID;
+    // si paramos la instancia actualizamos datos del usuario
+    if(ejecutarComando(pm2_stop) === 0) {
+      db.actualizarUser(UID, '-', '-');
+      db.actualizarWB(bancoID, '-', '', 'free');
+    } else return -2;
+    return 0;
+  } else {
+    console.log("No estas en ese banco");
+    return -1;
+  }
 
 }
 
@@ -143,6 +154,6 @@ function stopNodeRED(bancoID){
 function ejecutarComando(comando) {
   let options = {shell: true};
   const ret = spawnSync(comando, null, options);
-  console.log(ret.output.toString());
+  console.log("Salida ejecutar comando:" + ret.status);
   return ret.status;
 }

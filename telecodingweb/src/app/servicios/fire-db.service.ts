@@ -208,41 +208,6 @@ export class FireDBService {
   }
 
   /**
-   * ocupa un banco
-   * @banco: id del workbench
-   * @bancoNombre: nombre del banco a ocupar
-   * @email: del peticionario
-   * @avatar: avatar del peticionario
-   */
-  /* lo haremos en express
-    enter(banco: string, bancoNombre: string, peticionario: string, email: string, avatar) {
-      this.miDB.object('workbenchs/' + banco).update({userLogueado: email, avatar, status: 'busy'});
-      this.miDB.object('users/' + peticionario).update({banco, bancoNombre});
-  }*/
-
-  /**
-   * salir de un banco, resetearlo
-   * @param bancoID a resetear
-   * @param bancoNombre nombre del banco
-   * @param peticionario no procede
-   */
-
-  salir(bancoID: string, bancoNombre: string, peticionario: string) {
-    console.log('salir: ' + bancoNombre + ' ' + peticionario);
-    console.log(this.workbenchsArray);
-    const index = this.workbenchsArray.findIndex(function(item, i){
-      return item.nombre === bancoNombre;
-    });
-    console.log(index);
-    this.getAvatar();
-    this.miDB.object('workbenchs/' + bancoID).update({
-      status: 'free',
-      t_remaining: this.workbenchsArray[index].t_total, userLogueado: '',
-      avatar: this.getAvatar()});
-    this.miDB.object('users/' + peticionario).update({banco: '-', bancoNombre: '-'});
-  }
-
-  /**
    * devuelve dominio del servidor Express segun el banco
    * @param id del banco
    */

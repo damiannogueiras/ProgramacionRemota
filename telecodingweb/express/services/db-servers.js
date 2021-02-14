@@ -83,7 +83,9 @@ const actualizarWB = (bancoID, email, avatar, status) => {
     {
       userLogueado: email,
       avatar: avatar,
-      status: 'busy'
+      t_remaining: 120,
+      t_total: 120,
+      status: status
     }
   );
 };
@@ -100,7 +102,8 @@ const crearWB = (bancoID, email, avatar, status) => {
       avatar: avatar,
       components: 'node-red',
       userLogueado: email,
-      descr: '<p>Banco nodered ocupado</p>',
+      descr: '<p>Ocupado</p>',
+      nombre: 'Node-RED',
       pass: 1234,
       photo: 'https://firebasestorage.googleapis.com/v0/b/programacionremota.appspot.com/o/imagenes%2FAA00.png?alt=media&token=6242714d-6649-4470-8ba5-11f1aa620497',
       status: 'busy',
@@ -138,7 +141,6 @@ exports.getPrimeroLibre = getPrimeroLibre;
 
 /**
  * rellena con 1 el puerto levantado
- *
  */
 const setPuerto = (serverActual, puerto) => {
   console.log("Puerto a 1: " + puerto);
@@ -151,3 +153,14 @@ const setPuerto = (serverActual, puerto) => {
   console.log(portsWBNode);
 }
 exports.setPuerto = setPuerto;
+
+/**
+ * obtiene el banco que ocupa un usuario
+ * @param UID del usuario
+ * @return banco ucupado
+ */
+const getWBbyUID = (UID) => {
+  return users[UID].banco;
+}
+exports.getWBbyUID = getWBbyUID;
+

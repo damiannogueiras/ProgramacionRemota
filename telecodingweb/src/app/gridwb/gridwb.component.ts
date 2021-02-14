@@ -23,7 +23,6 @@ export class GridwbComponent {
   // default port
   private _portExpress = '4100';
   private _portBanco: string;
-  private _urlBanco: string;
 
   constructor(public miServDb: FireDBService,
               public miServAuth: FireAuthService,
@@ -36,7 +35,6 @@ export class GridwbComponent {
    * Solicitud de entrada a un banco
    * @param bancoIDSolicitado key en la base de datos
    * @param bancoSolicitado nombre del banco
-   * @param bancoURLSolicitado URL con el puerto correspondiente
    * @param bancoUsuario key del banco en la entrada del usuario logueado
    * @param bancoUsuarioNombre nombre del banco en la entrada del usario loguedo
    */
@@ -45,8 +43,7 @@ export class GridwbComponent {
     // recojo dominio
     this._express = this.miServDb.getDominio(bancoIDSolicitado);
     this._portExpress = this.miServDb.getPortExpress(bancoIDSolicitado);
-    //console.log(this._portExpress);
-
+    // console.log(this._portExpress);
     // comprobamos si esta en un banco
     if (bancoUsuario !== '-') {
       // esta en un banco
@@ -77,7 +74,7 @@ export class GridwbComponent {
         data => {
           console.log('Respuesta express: ' + data.code + ', ' + data.puerto);
           // code = 0 es ejecución correcta
-          if (data.code == 0){
+          if (data.code === 0){
             this.dialog.open(MessageComponent, {
               data: {
                 tipo: 'Info',
@@ -113,17 +110,18 @@ export class GridwbComponent {
   }
 
   /**
-   * Salir del banco. Para uso de pruebas
+   * Salir del banco.
    * @param bancoID identificacion del banco a cerrar
-   * @param bancoNombreSolicitado nombre del banco a cerrar
    */
-  salir(bancoID, bancoNombreSolicitado) {
+  salir(bancoID) {
     // recojo dominio
     this._express = this.miServDb.getDominio(bancoID);
     this._portExpress = this.miServDb.getPortExpress(bancoID);
 
-    this.miServDb.salir(bancoID, bancoNombreSolicitado, this.miServAuth.getUID());
-    this.http.get<any>('http://' + this._express + ':' + this._portExpress + '/cierre/' + bancoID).subscribe(
+    // this.miServDb.salir(bancoID, bancoNombreSolicitado, this.miServAuth.getUID());
+    this.http.get<any>('http://' + this._express + ':' + this._portExpress + '/cierre/' +
+      '?uid=' + this.miServAuth.getUID() +
+      '&bancoid=' + bancoID).subscribe(
       data => {
         console.log('Respuesta express:' + data.code);
       },
