@@ -14,10 +14,13 @@ const compression = require("compression");
 const _port = 4100;
 // puerto del primer banco de nodered
 const _portFirstNode = 2000;
+const NODORED_BANCOID = "AA2000";
 const _dominio = "programacionremota.danielcastelao.org";
 const _homeNodesRED = '/home/pi/ProgramacionRemota/node-red';
 // puerto del workbench
 var puertoWB = 0;
+const PUERTO_OCUPADO = 1;
+const PUERTO_LIBRE = 0;
 // usamos cors para permitir peticiones desde el angular
 var cors = require('cors');
 servidorExpress.use(cors());
@@ -62,9 +65,10 @@ servidorExpress.listen(_port, "0.0.0.0", () => {
 function levantarNodeRED(bancoID, bancoNombre, uid, email, avatar) {
   let nombreInstancia = "nombreInstancia";
   console.log("Start " + bancoID + " de " + email);
-  let serverActual = bancoID.substr(0,2);
+  let serverActual = getServerActual(bancoID);
   // comprobamos que no es un workbench, solo instancia nodered
-  if (bancoID == "AA2000") {
+  if (bancoID == NODORED_BANCOID) {
+    console.log("ES AA2000");
     // comprobamos que hay puertos libres
     if (db.getMaxInst(serverActual) > db.getNroInst(serverActual)) {
       // levantar instancia nodered
@@ -76,21 +80,21 @@ function levantarNodeRED(bancoID, bancoNombre, uid, email, avatar) {
       let nuevovalor = {nroInst: unomas};
       db.actualizoServer(serverActual, nuevovalor);
       // actualizar el puerto que elijo
-      db.setPuerto(serverActual, puertoWB);
+      db.setPuerto(serverActual, puertoWB, PUERTO_OCUPADO);
       // actualizo id para crear nuevo workbench en firebase
       let bancoIDnuevo = serverActual + puertoWB;
       nombreInstancia = bancoIDnuevo;
       // creo nuevo WB
       db.crearWB(bancoIDnuevo, email, avatar, "busy");
       db.actualizarUser(uid, bancoIDnuevo, bancoNombre);
-      console.log("levanto nodered");
+      // console.log("levanto nodered");
     } else {
      console.log("tienes que esperar");
     }
   } else {
-    console.log("no es nodered");
+    console.log("no es AA2000");
     nombreInstancia = bancoID;
-    puertoWB = bancoID.substr(2, bancoID.length);
+    puertoWB = getPuertoBanco(bancoID);
     db.actualizarWB(bancoID, email, avatar, "busy");
     db.actualizarUser(uid, bancoID, bancoNombre);
   }
@@ -118,13 +122,19 @@ function levantarNodeRED(bancoID, bancoNombre, uid, email, avatar) {
   // nodo inicial
   // argsNodeRED = argsNodeRED + ' flow' + bancoID + '.json';
   pm2_start = 'pm2 start node-red --name ' + nombreInstancia + ' -- ' + argsNodeRED;
-  console.log(pm2_start);
+  // console.log(pm2_start);
   return ejecutarComando(pm2_start);
 }
 
 /**
  * Ejecuta comandos para parar instancia de node-RED
  * Comprueba que el usuario que solicita es el que está en el banco
+ * Actuliza firebase
+ *   registro del usuario
+ *   registro del workbench
+ *   resta uno a las instancias
+ *   libera el puerto
+ *   borra workbench
  * @param UID key del usuario que solicita el cierre
  * @param bancoID banco de trabajo, instancia de node-RED
  */
@@ -132,12 +142,25 @@ function stopNodeRED(UID, bancoID){
   console.log("Delete " + bancoID + " ocupado por " + UID);
   // comprobamos que el usuario esta usando el banco
   if(bancoID == db.getWBbyUID(UID)){
+
+    let serverActual = getServerActual(bancoID);
     // comando a ejecutar
     let pm2_stop = 'pm2 delete ' + bancoID;
-    // si paramos la instancia actualizamos datos del usuario
+    // si paramos la instancia actualizamos datos firebase
     if(ejecutarComando(pm2_stop) === 0) {
       db.actualizarUser(UID, '-', '-');
-      db.actualizarWB(bancoID, '-', '', 'free');
+      db.actualizarWB(bancoID, '-', db.getAvatarRand(), 'free');
+      // resto uno a las instancias
+      let unomenos = db.getNroInst(serverActual) - 1;
+      let nuevovalor = {nroInst: unomenos};
+      db.actualizoServer(serverActual, nuevovalor);
+      // si es nodered only
+      if (db.isNodeRED(bancoID)) {
+        // borro el banco
+        db.borrarWB(bancoID);
+        // libero puerto
+        db.setPuerto(serverActual, getPuertoBanco(bancoID), PUERTO_LIBRE);
+      }
     } else return -2;
     return 0;
   } else {
@@ -154,6 +177,22 @@ function stopNodeRED(UID, bancoID){
 function ejecutarComando(comando) {
   let options = {shell: true};
   const ret = spawnSync(comando, null, options);
-  console.log("Salida ejecutar comando:" + ret.status);
+  // console.log("Salida ejecutar comando:" + ret.status);
   return ret.status;
+}
+
+/**
+ * devuelve el puerto del bancoID
+ */
+function getPuertoBanco(bancoID) {
+  // console.log("El banco es: " + parseInt(bancoID.substr(2,bancoID.length)));
+  return parseInt(bancoID.substr(2,bancoID.length));
+}
+
+/**
+ * devuelve el server actual
+ */
+function getServerActual(bancoID){
+  // dos primeros caracteres es el key del servidor
+  return bancoID.substr(0,2);
 }

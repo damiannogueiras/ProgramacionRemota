@@ -119,7 +119,7 @@ export class GridwbComponent {
     this._portExpress = this.miServDb.getPortExpress(bancoID);
 
     // this.miServDb.salir(bancoID, bancoNombreSolicitado, this.miServAuth.getUID());
-    this.http.get<any>('http://' + this._express + ':' + this._portExpress + '/cierre/' +
+    this.http.get<any>('http://' + this._express + ':' + this._portExpress + '/cierre' +
       '?uid=' + this.miServAuth.getUID() +
       '&bancoid=' + bancoID).subscribe(
       data => {

@@ -19,12 +19,22 @@ var refServers = db.ref("servers");
 var refWbs = db.ref("workbenchs");
 // ruta a los users
 var refUsers = db.ref("users");
+// ruta a los avatares
+var refAvatares = db.ref("servers/AA/avatares");
 
 
 // Attach an asynchronous callback to read the data at our posts reference
 refServers.on("value", function(snapshot) {
   servidores = snapshot.val();
   //console.log(servidores);
+
+}, function (errorObject) {
+  console.log("La lectura servidores realtime fallo: " + errorObject.code);
+});
+// Attach an asynchronous callback to read the data at our posts reference
+refAvatares.on("value", function(snapshot) {
+  avatares = snapshot.val();
+  // console.log(avatares);
 
 }, function (errorObject) {
   console.log("La lectura servidores realtime fallo: " + errorObject.code);
@@ -55,8 +65,8 @@ refUsers.on("value", function(snapshot) {
  * @param nuevo formato json de lo que queremos actualizar
  */
 const actualizoServer = (serverActual, nuevo) => {
-  console.log("Actualizo Server Actual: " + serverActual.toString());
-  console.log("con " + nuevo.toString());
+  // console.log("Actualizo Server Actual: " + serverActual.toString());
+  // console.log("con " + nuevo.toString());
   refServers.child(serverActual).update(nuevo);
 }
 exports.actualizoServer = actualizoServer;
@@ -117,6 +127,22 @@ const crearWB = (bancoID, email, avatar, status) => {
 exports.crearWB = crearWB;
 
 /**
+ * para saber si el WB es un banco nodeRED only
+ */
+const isNodeRED = (bancoID) => {
+  return(wbs[bancoID].nombre == "Node-RED");
+}
+exports.isNodeRED = isNodeRED;
+/**
+ * Borrar WB
+ */
+const borrarWB = (bancoID) => {
+  console.log("Borro " + bancoID);
+  refWbs.child(bancoID).remove();
+}
+exports.borrarWB = borrarWB;
+
+/**
  * Actualizo datos del user
  */
 const actualizarUser = (uid, bancoID, bancoNombre) => {
@@ -134,23 +160,20 @@ exports.actualizarUser = actualizarUser;
  * @return indice del primer puerto libre
  */
 const getPrimeroLibre = () => {
-  console.log("Primero libre:" + portsWBNode.indexOf(0));
+  // console.log("Primero libre:" + portsWBNode.indexOf(0));
   return portsWBNode.indexOf(0);
 }
 exports.getPrimeroLibre = getPrimeroLibre;
 
 /**
- * rellena con 1 el puerto levantado
+ * rellena con 1/0 el puerto levantado
  */
-const setPuerto = (serverActual, puerto) => {
-  console.log("Puerto a 1: " + puerto);
+const setPuerto = (serverActual, puerto, value) => {
+  // console.log("Puerto a 1: " + puerto);
   let indice = puerto - 2000;
-  portsWBNode[indice] = 1;
-  //var nuevopuerto = "{" + indice + ": 1}";
-  //nuevopuerto = JSON.parse(nuevopuerto);
-  //console.log(nuevopuerto);
+  portsWBNode[indice] = value;
   refServers.child(serverActual).child("portsWBNode").set(portsWBNode);
-  console.log(portsWBNode);
+  // console.log(portsWBNode);
 }
 exports.setPuerto = setPuerto;
 
@@ -163,4 +186,14 @@ const getWBbyUID = (UID) => {
   return users[UID].banco;
 }
 exports.getWBbyUID = getWBbyUID;
+
+/**
+ * obtiene avatar random
+ * @return URL avatar
+ */
+const getAvatarRand = () => {
+  // Math.random() * 59 pasamos a entero el random
+  return avatares[Math.round(Math.random() * 59)];
+}
+exports.getAvatarRand = getAvatarRand;
 
