@@ -1,3 +1,5 @@
+
+
 /**
  * Utilizamos la service account para entornos de servidores
  * https://console.cloud.google.com/iam-admin/serviceaccounts/details/112294775774598014073?authuser=0&project=programacionremota
@@ -105,7 +107,7 @@ exports.actualizarWB = actualizarWB;
  * crear a WB
  * TODO copiar de una plantilla, por ej del AA2000
  */
-const crearWB = (bancoID, email, avatar, status) => {
+const crearWB = (bancoID, uid, email, avatar, status) => {
   refWbs.child(bancoID).update(
     {
       UD: 'https://nodered.org/docs/tutorials/first-flow',
@@ -119,7 +121,7 @@ const crearWB = (bancoID, email, avatar, status) => {
       status: 'busy',
       t_remaining: 120,
       t_total: 120,
-      userLogueado: '',
+      userUIDLogueado: uid,
       userNodeRED: 'yoda',
     }
   );
@@ -186,6 +188,11 @@ const getWBbyUID = (UID) => {
   return users[UID].banco;
 }
 exports.getWBbyUID = getWBbyUID;
+
+const getUIDbyWB = (bancoID) => {
+  return wbs[bancoID].userUIDLogueado;
+}
+exports.getUIDbyWB = getUIDbyWB;
 
 /**
  * obtiene avatar random

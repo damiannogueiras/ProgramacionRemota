@@ -14,12 +14,11 @@
               </g>
             </svg>
           </a>
-          <span class="telecoding-typography" style="padding-left: 10px">TeleCoding</span>
+          <span class="telecoding-typography" style="padding-left: 10px">Programación Remota</span>
       </div>
       <div class="col" style="text-align: right">
           <div class="telecoding-typography" *ngIf="( miServAuth.miAuth.user | async) as obs; else login">
             Hola, {{obs.displayName}}
-            <button class="mat-raised-button telecoding-typography" (click)="miServAuth.logout()">Salir</button>
           </div>
           <ng-template #login>
             <button  class="mat-raised-button telecoding-typography" (click)="miServAuth.glogin()">
@@ -27,16 +26,29 @@
           </ng-template>
       </div>
     </mat-toolbar-row>
+    <!--
+    <mat-toolbar-row>
+      <div class="col">
+        <a class="mat-raised-button telecoding-typography" routerLink="/gridwb">Elige banco</a>
+        <a class="mat-raised-button telecoding-typography" routerLink="/minodered">Mi nodeRED</a>
+        <a class="mat-raised-button telecoding-typography" routerLink="/dashboard">Mi dashboard</a>
+        <a class="mat-raised-button telecoding-typography" routerLink="/cerrar">Cerrar mi nodeRED</a>
+      </div>
+      <div class="col" style="text-align: right" *ngIf="( miServAuth.miAuth.user | async) as obs;">
+        <a class="mat-raised-button telecoding-typography" (click)="miServAuth.logout()">Salir</a>
+      </div>
+    </mat-toolbar-row>
+    -->
   </mat-toolbar>
 
-  <!-- Workbenchs Grid -->
-  <app-gridwb></app-gridwb>
-
-  <!-- Footer -->
-  <mat-toolbar color="primary" class="fix-footer mat-elevation-z20">
-    <a class="footer" href="https://github.com/damiancastelao/ProgramacionRemota" target="_blank" rel="noopener"> ¿ Quieres colaborar o hacer tu propio TeleCoding ? Repo en Github</a>
-  </mat-toolbar>
 
   <router-outlet></router-outlet>
 
+  <!-- Footer  -->
+  <mat-toolbar color="primary" class="fix-footer mat-elevation-z20">
+    <a class="footer" href="https://github.com/damiancastelao/ProgramacionRemota" target="_blank" rel="noopener"> ¿ Quieres colaborar o hacer tu propio TeleCoding ? Repo en Github</a>
+  </mat-toolbar>
 </div>
+
+
+

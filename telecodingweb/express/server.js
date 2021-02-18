@@ -85,7 +85,7 @@ function levantarNodeRED(bancoID, bancoNombre, uid, email, avatar) {
       let bancoIDnuevo = serverActual + puertoWB;
       nombreInstancia = bancoIDnuevo;
       // creo nuevo WB
-      db.crearWB(bancoIDnuevo, email, avatar, "busy");
+      db.crearWB(bancoIDnuevo, uid, email, avatar, "busy");
       db.actualizarUser(uid, bancoIDnuevo, bancoNombre);
       // console.log("levanto nodered");
     } else {
@@ -141,8 +141,10 @@ function levantarNodeRED(bancoID, bancoNombre, uid, email, avatar) {
 function stopNodeRED(UID, bancoID){
   console.log("Delete " + bancoID + " por " + UID);
   // comprobamos que el usuario esta usando el banco
-  if(bancoID == db.getWBbyUID(UID) || UID === 'admin'){
+  // o es admin (el cronometro)
 
+  if(bancoID == db.getWBbyUID(UID) || UID === 'admin'){
+    if (UID === 'admin') UID = db.getUIDbyWB(bancoID);
     let serverActual = getServerActual(bancoID);
     // comando a ejecutar
     let pm2_stop = 'pm2 delete ' + bancoID;
