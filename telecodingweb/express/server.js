@@ -139,15 +139,15 @@ function levantarNodeRED(bancoID, bancoNombre, uid, email, avatar) {
  * @param bancoID banco de trabajo, instancia de node-RED
  */
 function stopNodeRED(UID, bancoID){
-  console.log("Delete " + bancoID + " ocupado por " + UID);
+  console.log("Delete " + bancoID + " por " + UID);
   // comprobamos que el usuario esta usando el banco
-  if(bancoID == db.getWBbyUID(UID)){
+  if(bancoID == db.getWBbyUID(UID) || UID === 'admin'){
 
     let serverActual = getServerActual(bancoID);
     // comando a ejecutar
     let pm2_stop = 'pm2 delete ' + bancoID;
     // si paramos la instancia actualizamos datos firebase
-    if(ejecutarComando(pm2_stop) === 0) {
+    if(ejecutarComando(pm2_stop) === 0 || ejecutarComando(pm2_stop) === 1) {
       db.actualizarUser(UID, '-', '-');
       db.actualizarWB(bancoID, '-', db.getAvatarRand(), 'free');
       // resto uno a las instancias
@@ -177,7 +177,7 @@ function stopNodeRED(UID, bancoID){
 function ejecutarComando(comando) {
   let options = {shell: true};
   const ret = spawnSync(comando, null, options);
-  // console.log("Salida ejecutar comando:" + ret.status);
+  console.log("Salida ejecutar comando:" + ret.status);
   return ret.status;
 }
 
