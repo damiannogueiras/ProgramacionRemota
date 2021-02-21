@@ -1,19 +1,26 @@
-.fix {
-  position: fixed;
-  top: 0px;
-  left: 0px;
-  width: 100%;
+#wrapper {
+  height: 100vh;
+  display: grid;
+  grid-template-rows: 64px minmax(0px, 64px) 1fr 64px;
 }
-.fix-footer {
-  position: fixed;
-  bottom: 0px;
-  left: 0px;
-  height: 3em;
-  width: 100%;
+
+#content {
+  overflow-y: scroll;
+}
+
+#header {
+
+}
+
+#userbar {
+  background-color: #673ab7;
+}
+
+#content {
+
 }
 
 .footer {
-  padding: 12px;
   color: white;
   text-align: center;
   display: block;
@@ -21,11 +28,13 @@
   font-size: 0.75em;
 }
 
-footer a {
-  color: aliceblue;
+.spacer {
+  flex: 1 1 auto;
 }
 
-a.mat-raised-button {
-  margin: 5px;
-  color: darkslateblue;
-}
+
+
+
+
+
+

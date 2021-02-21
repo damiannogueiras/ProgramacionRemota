@@ -115,6 +115,7 @@ const crearWB = (bancoID, uid, email, avatar, status) => {
       components: 'node-red',
       userLogueado: email,
       descr: '<p>Ocupado</p>',
+      show: false,
       nombre: 'Node-RED',
       pass: 1234,
       photo: 'https://firebasestorage.googleapis.com/v0/b/programacionremota.appspot.com/o/imagenes%2FAA00.png?alt=media&token=6242714d-6649-4470-8ba5-11f1aa620497',

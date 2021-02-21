@@ -89,6 +89,7 @@ function levantarNodeRED(bancoID, bancoNombre, uid, email, avatar) {
       db.actualizarUser(uid, bancoIDnuevo, bancoNombre);
       // console.log("levanto nodered");
     } else {
+
      console.log("tienes que esperar");
     }
   } else {

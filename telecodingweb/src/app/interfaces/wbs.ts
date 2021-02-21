@@ -2,15 +2,17 @@
 
 export interface IWbs {
   'UD': string;
+  'avatar': string;
+  'components': string;
   'descr': string;
   'nombre': string;
   'pass': string;
+  'photo': string;
+  'show': boolean;
   'status': string;
-  't_total': number;
   't_remaining': number;
+  't_total': number;
   'userLogueado': string;
   'userNodeRED': string;
-  'avatar': string;
-  'components': string;
-  'photo': string;
+  'userUIDLogueado': string;
 }

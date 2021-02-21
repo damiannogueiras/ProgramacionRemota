@@ -1,11 +1,10 @@
 import {Injectable, OnInit} from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 
 // las clases para trabajar con bases de datos
-import {AngularFireAction, AngularFireDatabase, AngularFireList} from '@angular/fire/database';
+import {AngularFireDatabase, AngularFireList} from '@angular/fire/database';
 
 import {BehaviorSubject, Observable, Subject} from 'rxjs';
-import {map, switchMap} from 'rxjs/operators';
+import {switchMap} from 'rxjs/operators';
 import {IUsers} from '../interfaces/users';
 import {IWbs} from '../interfaces/wbs';
 import {IServers} from '../interfaces/servers';
@@ -31,7 +30,7 @@ export class FireDBService {
   userArray: IUsers[];
   workbenchsArray: IWbs[] = [];
 
-  avatarList: Array<string> = [
+  /*avatarList: Array<string> = [
     'https://ssl.gstatic.com/docs/common/profile/alligator_lg.png',
     'http://ssl.gstatic.com/docs/common/profile/anteater_lg.png',
     'http://ssl.gstatic.com/docs/common/profile/axolotl_lg.png',
@@ -93,16 +92,13 @@ export class FireDBService {
     'http://ssl.gstatic.com/docs/common/profile/walrus_lg.png',
     'http://ssl.gstatic.com/docs/common/profile/wolverine_lg.png',
     'http://ssl.gstatic.com/docs/common/profile/wombat_lg.png'
-  ];
+  ];*/
 
   /**
    * Constructor de la clase
    * db objeto para manejar datos en la Database RealTime
    */
   constructor(public miDB: AngularFireDatabase) {
-
-    // recuperamos los bancos y estamos pendiente de los cambios
-    // this.workbenchs = miDB.list('workbenchs').valueChanges();
 
     // recuperamos los usuarios y estamos pendiente de los cambios
     this.users = miDB.list('users').valueChanges().pipe(
@@ -122,22 +118,9 @@ export class FireDBService {
       )
     );
 
-
     // lista de usuarios (no Observable, solo lista)
-    this.usersList = this.miDB.list('/users');
+    // this.usersList = this.miDB.list('/users');
 
-    /*
-    // recuperamos usuario por mail
-    this.mail$ = new BehaviorSubject(null);
-    this.usersItems$ = this.mail$.pipe(
-      switchMap(mail => {
-        return this.miDB.list(
-          '/users',
-          ref =>
-            mail ? ref.orderByChild('mail').equalTo(mail) : ref
-        ).valueChanges()
-      })
-    */
     // guardamos los servers en el array
     this.miDB.list('servers').snapshotChanges().subscribe(
       data => {
@@ -150,7 +133,23 @@ export class FireDBService {
           // console.log(a);
           this.serverArray.push(a as IServers);
         });
-        console.log(this.serverArray);
+        // console.log(this.serverArray);
+      }
+    );
+
+    // guardamos los users en el array
+    this.miDB.list('users').snapshotChanges().subscribe(
+      data => {
+        this.userArray = [];
+        data.forEach(item => {
+          const a = item.payload.toJSON();
+          // @ts-ignore
+          a.$key = item.key;
+          // console.log(item);
+          // console.log(a);
+          this.userArray.push(a as IUsers);
+        });
+        // console.log(this.userArray);
       }
     );
 
@@ -169,18 +168,9 @@ export class FireDBService {
         // console.log(this.workbenchsArray);
       }
     );
-
     // console.log('Fin del constructor');
   } // fin del constructor
 
-
-  /**
-   * Obtiene toda la informacion del fichero avatarlist.json
-   */
-  public getAvatar() {
-    // console.log(Math.round(Math.random() * this.avatarList.length) );
-    return (this.avatarList[Math.round(Math.random() * this.avatarList.length)]);
-  }
 
   /**
    * Crea entrada según la uid del usuario
@@ -213,18 +203,21 @@ export class FireDBService {
    */
   getDominio(bancoID: string) {
     // console.log(bancoID.substr(0, 2));
+    // tslint:disable-next-line:only-arrow-functions
     const index = this.serverArray.findIndex(function(item, i){
       // @ts-ignore
       return item.$key === bancoID.substr(0, 2);
     });
     return this.serverArray[index].dominio;
   }
+
   /**
    * devuelve puerto Express segun el banco
    * @param id del banco
    */
   getPortExpress(bancoID: string) {
     // console.log(bancoID.substr(0, 2));
+    // tslint:disable-next-line:only-arrow-functions
     const index = this.serverArray.findIndex(function(item, i){
       // @ts-ignore
       return item.$key === bancoID.substr(0, 2);
@@ -233,27 +226,54 @@ export class FireDBService {
   }
 
   /**
-   * devuelve user por UID
-   * @param uid user
+   * devuelve user por UID, antes check que el array está definido
+   * @param mail user
+   * @return objeto user
    */
-  getUser(mail: string) {
-    return this.miDB.list(
-      '/users',
-      ref => ref.orderByChild('mail').equalTo(mail)
-    ).valueChanges();
-    console.log('Filtro por mail: ' + mail);
+  getUserByMail(mail: string) {
+    if (!this.userArray) {
+      // devuelvo objeto vacio
+      return null;
+    } else {
+      // tslint:disable-next-line:only-arrow-functions
+      const index = this.userArray.findIndex(function(item, i){
+        // @ts-ignore
+        return item.mail === mail;
+      });
+      return this.userArray[index];
+    }
+
   }
 
   /**
-   * comprobamos si esta en un banco
-   * @param mail del solicitante
-   * @return si está en un banco
+   * devuelve wb por mail, antes check que el array está definido
+   * @param mail user
+   * @return objeto wb
    */
-  isAtWB(mail: string) {
-    const esta = true;
-    console.log('¿ ' + mail + ' esta en un banco?');
-    /*this.mail$.next(mail);
-    this.usersItems$.map*/
-    return esta;
+  getWbByMail(mail: string) {
+    if (!this.workbenchsArray) {
+      // devuelvo objeto vacio
+      return null;
+    } else {
+      // tslint:disable-next-line:only-arrow-functions
+      const index = this.workbenchsArray.findIndex(function(item, i){
+        // @ts-ignore
+        return item.userLogueado === mail;
+      });
+      return this.workbenchsArray[index];
+    }
+  }
+
+  /**
+   * comprobamos si esta en un banco comprueba antes si no es null
+   * @param mail del solicitante
+   * @return si está en un banco true
+   */
+  isAtWB(mail: string): boolean {
+    if (!this.getUserByMail(mail)) {
+      return false;
+    } else {
+      return (this.getUserByMail(mail).banco !== '-');
+    }
   }
 }

@@ -30,9 +30,10 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 
 import { HttpClientModule } from '@angular/common/http';
 import { BrowserModule } from '@angular/platform-browser';
-import {DashboardComponent} from './dashboard/dashboard.component';
-import {MinoderedComponent} from './minodered/minodered.component';
+import { DashboardComponent } from './dashboard/dashboard.component';
+import { MinoderedComponent } from './minodered/minodered.component';
 import { SafePipe } from './safe.pipe';
+import { UserbarComponent } from './userbar/userbar.component';
 
 @NgModule({
   declarations: [
@@ -41,7 +42,8 @@ import { SafePipe } from './safe.pipe';
     MessageComponent,
     DashboardComponent,
     MinoderedComponent,
-    SafePipe
+    SafePipe,
+    UserbarComponent
   ],
   imports: [
     AppRoutingModule,

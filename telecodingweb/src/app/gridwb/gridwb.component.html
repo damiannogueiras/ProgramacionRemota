@@ -1,30 +1,25 @@
-<div>
-  <h1 class="choose mat-display-2 telecoding-typography"><mat-icon matTooltip="Elige" class="icon-15x">input</mat-icon> Elige banco de trabajo
-    <br><br>
-
-  <h5>
-    <mat-icon matTooltip="UD">description</mat-icon> Unidad didáctica <mat-icon matTooltip="Ocupado" color="warn"> alarm_on</mat-icon> Banco ocupado, tiempo hasta que quede libre
-  </h5>
-  </h1>
-
+<div class="mat-elevation-z0">
+  <h1 class="choose mat-display-2 telecoding-typography"><mat-icon matTooltip="choose workbench" class="icon-15x">input</mat-icon> Elige banco de trabajo</h1>
   <div
     fxLayout="row wrap"
     fxLayout.lt-sm="column"
     fxLayoutGap="32px"
     fxLayoutAlign="flex-start"
-    class="cardList">
-    <ng-container class="mat-elevation-z2" *ngFor="let workbench of miServDb.workbenchs | async">
-      <mat-card class="mat-elevation-z2 telecoding-typography">
+    class="cardList" >
+      <!-- TODO    -->
+      <ng-container *ngFor="let workbench of (miServDb.workbenchs | async)">
+        <mat-card class="mat-elevation-z2 telecoding-typography"   *ngIf="workbench.payload.val().show">
         <mat-card-header>
-          <div mat-card-avatar style="padding: 5px"><img mat-card-image width="50px" class="circular"
-                                                         src="{{workbench.payload.val().avatar}}"></div>
+          <div mat-card-avatar style="padding: 5px">
+            <img mat-card-image width="50px" class="circular" src="{{workbench.payload.val().avatar}}">
+          </div>
           <mat-card-title class="mat-card-title">
             <span class="md-headline">{{workbench.payload.val().nombre}}</span>
           </mat-card-title>
           <mat-card-subtitle><span class="md-headline">{{workbench.payload.val().components}}</span></mat-card-subtitle>
         </mat-card-header>
-        <img class="card-picture" mat-card-image [src]="workbench.payload.val().photo">
         <mat-card-content>
+          <img class="card-picture" mat-card-image [src]="workbench.payload.val().photo">
           <p [innerHTML]="workbench.payload.val().descr"></p>
           <p>Disponibiliad: {{workbench.payload.val().t_total}}min</p>
           <!-- debug
@@ -32,7 +27,6 @@
           <code>{{workbench.payload.key}}</code>
           -->
         </mat-card-content>
-
         <mat-card-actions>
           <!-- Unidad Didactica -->
           <a matTooltip="Unidad Didáctica" target=_blank href="{{workbench.payload.val().UD}}">
@@ -48,18 +42,6 @@
                 alarm_on
               </mat-icon>
             </button>
-            <!-- para salir del banco antes de tiempo -->
-            <!-- TODO solo puede salir el usuario que entro
-            *ngIf="(user.payload.val().nombre == workbench.payload.key)"
-            <ng-container *ngFor="let user of miServDb.users | async"> -->
-                <button class="mat-icon-button fondo" (click)="salir(workbench.payload.key)" >
-                  <mat-icon matTooltip="salir workbench" color="warn"
-                            class="mat-icon notranslate material-icons mat-icon-no-color">
-                    clear
-                  </mat-icon>
-                </button>
-            <!--</ng-container>-->
-
           </span>
           <!-- Libre -->
           <ng-template #elseBusy>
@@ -90,8 +72,8 @@
             </ng-template>
           </ng-template>
         </mat-card-actions>
-      </mat-card>
-    </ng-container>
+        </mat-card>
+  </ng-container>
 
   </div>
 </div>

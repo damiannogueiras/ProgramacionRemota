@@ -5,12 +5,10 @@ import {MatDialog} from '@angular/material/dialog';
 
 // comunicacion con el servidor express
 import {HttpClient} from '@angular/common/http';
-import {Injectable} from '@angular/core';
-import {Observable, throwError} from 'rxjs';
-import {catchError, retry} from 'rxjs/operators';
-
+// servicios de auth y acceso a db
 import {FireAuthService} from '../servicios/fire-auth.service';
 import {FireDBService} from '../servicios/fire-db.service';
+
 
 @Component({
   selector: 'app-gridwb',
@@ -80,19 +78,12 @@ export class GridwbComponent {
                 tipo: 'Info',
                 message:
                 // problemas con unsafe URL
-                // '<a target="_blank" href="' + this._urlBanco + '">' + bancoSolicitado + '</a>',
-                  '<p>Puedes abrir el banco: ' + bancoSolicitado + '</p></p>http://' + this._express + ':' + data.puerto + '</p>',
+                'Ya puedes entrar en <a href="minodered">' + bancoSolicitado + '</a>',
                 id: 'puedes'
               }
             });
+            // reenviamos a mi nodered
           }
-          /*Realizamos esta tarea en el express
-            this.miServDb.enter(
-            bancoIDSolicitado,
-            bancoSolicitado,
-            this.miServAuth.getUID(),
-            this.miServAuth.getEmail(),
-            this.miServAuth.getPhoto());*/
         },
         // error cuando el servidor intentó levantar el banco
         error => {
@@ -110,28 +101,6 @@ export class GridwbComponent {
   }
 
   /**
-   * Salir del banco.
-   * @param bancoID identificacion del banco a cerrar
-   */
-  salir(bancoID) {
-    // recojo dominio
-    this._express = this.miServDb.getDominio(bancoID);
-    this._portExpress = this.miServDb.getPortExpress(bancoID);
-
-    // this.miServDb.salir(bancoID, bancoNombreSolicitado, this.miServAuth.getUID());
-    this.http.get<any>('http://' + this._express + ':' + this._portExpress + '/cierre' +
-      '?uid=' + this.miServAuth.getUID() +
-      '&bancoid=' + bancoID).subscribe(
-      data => {
-        console.log('Respuesta express:' + data.code);
-      },
-      error => {
-        console.error('Error al cerrar banco', error);
-      }
-    );
-  }
-
-  /**
    * avisamos que se tiene que loguear
    */
   noLogueadoAviso() {
@@ -142,5 +111,9 @@ export class GridwbComponent {
         id: 'logueate'
       }
     });
+  }
+
+  showWB(workbench: any): boolean {
+    return (workbench.payload.val().show);
   }
 }

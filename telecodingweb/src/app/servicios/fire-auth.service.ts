@@ -1,12 +1,10 @@
 import {Injectable} from '@angular/core';
-import {Observable} from 'rxjs';
 
 // autenticacion por firebase
 import {AngularFireAuth} from '@angular/fire/auth';
 import {auth} from 'firebase';
 // importamos el servicio de acceso a la BD
 import {FireDBService} from './fire-db.service';
-import {AngularFireDatabase} from '@angular/fire/database';
 import {MessageComponent} from '../message/message.component';
 import {MatDialog} from '@angular/material/dialog';
 
@@ -44,6 +42,7 @@ export class FireAuthService {
       .then(user => {
         console.log('user logado: ', user);
         // actualizamos la base de datos
+        // TODO pasarlo a express
         this.miDB.altausuario(user.user.uid, user.user.email, user.user.photoURL);
       })
       .catch(error => {
@@ -62,26 +61,25 @@ export class FireAuthService {
   logout() {
     console.log('logout!');
     this.miAuth.signOut();
+    // TODO pasarlo a express
     this.miDB.bajausuario(this.currentUser.uid);
   }
 
   // esta logueado?
   isLogueado(): boolean {
-    // console.log('islog?');
-    // console.log(this.currentUser);
     return (this.currentUser !== null);
-    }
+  }
 
-    // obtenemos foto perfil
+  // obtenemos foto perfil
   getPhoto(){
-    return this.currentUser.photoURL;
+    return (this.isLogueado() ? this.currentUser.photoURL : '');
   }
   // obtenemos correo
   getEmail() {
-    return this.currentUser.email;
+    return (this.isLogueado() ? this.currentUser.email : '');
   }
   // obtenemos uid
   getUID() {
-    return this.currentUser.uid;
+    return (this.isLogueado() ? this.currentUser.uid : '');
   }
 }

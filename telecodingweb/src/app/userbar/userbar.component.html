@@ -1,0 +1,14 @@
+<mat-toolbar id="info" class="mat-elevation-z2" >
+  <mat-toolbar-row >
+      <a class="mat-raised-button telecoding-typography" routerLink="/minodered">Mi nodeRED</a>
+      <a class="mat-raised-button telecoding-typography" routerLink="/dashboard">Mi dashboard</a>
+      <a class="mat-raised-button telecoding-typography" routerLink="/gridwb" (click)="salir(miServDb.getUserByMail(miServAuth.getEmail()))" >Salir de banco {{this._nombreBanco}}</a>
+      <span class="spacer"></span>
+      <div *ngFor="let workbench of miServDb.workbenchs | async">
+          <div *ngIf="workbench.payload.val().userLogueado === miServAuth.getEmail()" class="telecoding-typography">
+            Puerto: {{this._puerto}}, keytopic: {{this._keytopic}}, tiempo restante:{{this._t_remaining}}</div>
+      </div>
+  </mat-toolbar-row>
+</mat-toolbar>
+
+

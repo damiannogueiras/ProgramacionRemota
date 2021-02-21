@@ -12,8 +12,24 @@ $theme: mat-light-theme($primary, $accent);
 // Include all theme styles for the components.
 @include angular-material-theme($theme);
 
+// afecta a todos los componentes
 .telecoding-typography {
   font-family: Quicksand
+}
+
+button {
+  border-width: 0px;
+  border-radius: 10px;
+}
+
+a, a:visited {
+  color: white;
+  font-family: Quicksand;
+}
+
+a:focus, a:hover {
+  color: #5f9ea0;
+  text-decoration-line: none;
 }
 
 

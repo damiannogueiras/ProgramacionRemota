@@ -15,18 +15,20 @@ import {FireDBService} from '../servicios/fire-db.service';
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
-  styleUrls: ['./dashboard.component.scss']
+  styleUrls: ['../app.component.scss']
 })
 export class DashboardComponent {
-  // tslint:disable:variable-name
-  private _express = '';
-  // default port
-  private _portExpress = '4100';
-  private _portBanco: string;
 
   constructor(public miServDb: FireDBService,
-              public miServAuth: FireAuthService,
-              private dialog: MatDialog,
-              private http: HttpClient) {
+              public miServAuth: FireAuthService) {}
+
+  createURL() {
+    if (this.miServDb.isAtWB(this.miServAuth.getEmail())) {
+      const banco = this.miServDb.getUserByMail(this.miServAuth.getEmail()).banco;
+      const puerto = banco.substr(2, banco.length);
+      return 'http://programacionremota.danielcastelao.org:' + puerto + '/ui';
+    } else {
+      return '';
+    }
   }
 }
