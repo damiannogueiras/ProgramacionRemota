@@ -32,14 +32,15 @@
     </mat-toolbar>
 </div>
   <!-- user bar -->
-  <div id="userbar">
-    <app-userbar  *ngIf="miServDb.isAtWB(miServAuth.getEmail())" ></app-userbar>
+  <div id="userbar" *ngIf="miServDb.isAtWB(miServAuth.getEmail());else grid">
+    <app-userbar></app-userbar>
   </div>
-
   <!-- Contenedor secundario -->
-  <div id="content">
-    <router-outlet></router-outlet>
+  <ng-template #grid>
+  <div id="grid">
+    <app-gridwb></app-gridwb>
   </div>
+  </ng-template>
 
   <!-- Footer  -->
   <div id="footer">

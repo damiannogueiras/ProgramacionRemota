@@ -6,6 +6,8 @@
  */
 
 "use strict";
+// para servir app angular
+const _app_folder = '../dist/telecoding';
 // servidor express
 const express = require("express");
 const servidorExpress = express();
@@ -15,7 +17,7 @@ const _port = 4100;
 // puerto del primer banco de nodered
 const _portFirstNode = 2000;
 const NODORED_BANCOID = "AA2000";
-const _dominio = "programacionremota.danielcastelao.org";
+const _dominio = "remote.danielcastelao.org";
 const _homeNodesRED = '/home/pi/ProgramacionRemota/node-red';
 // puerto del workbench
 var puertoWB = 0;
@@ -31,12 +33,18 @@ var corsOptions = {
 // comprimir encabezados
 servidorExpress.use(compression());
 
+
 // modulo child_process para ejecutar comandos del sistema
 var spawnSync = require('child_process').spawnSync;
 
 var db = require("./services/db-servers.js");
 
 // Rutas
+
+// TODO ---- SERVE STATIC FILES ANGULAR---- //
+//servidorExpress.use(express.static('.'));
+//servidorExpress.get("/hola", express.static('.', {maxAge: '1y'}));
+
 // ---- SOLICITUD DE PUESTA EN MARCHA DE UN BANCO DE TRABAJO ---- //
 servidorExpress.get("/solicitud", cors(corsOptions), async (req, res) => {
   const result = await levantarNodeRED(req.query.bancoid, req.query.banconombre, req.query.uid, req.query.user, req.query.avatar);
@@ -48,6 +56,8 @@ servidorExpress.get("/cierre", cors(corsOptions), async (req, res) => {
   const result = await stopNodeRED(req.query.uid, req.query.bancoid);
   res.send("{\"code\":" + result + "}");
 });
+
+
 
 // escucha del servidor
 servidorExpress.listen(_port, "0.0.0.0", () => {

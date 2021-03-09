@@ -26,7 +26,7 @@ export class DashboardComponent {
     if (this.miServDb.isAtWB(this.miServAuth.getEmail())) {
       const banco = this.miServDb.getUserByMail(this.miServAuth.getEmail()).banco;
       const puerto = banco.substr(2, banco.length);
-      return 'http://programacionremota.danielcastelao.org:' + puerto + '/ui';
+      return 'http://remote.danielcastelao.org:' + puerto + '/ui';
     } else {
       return '';
     }

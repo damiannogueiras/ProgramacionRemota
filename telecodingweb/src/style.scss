@@ -32,4 +32,16 @@ a:focus, a:hover {
   text-decoration-line: none;
 }
 
+.mat-tab-label, .mat-tab-link {
+  font-family: Quicksand;
+  color: white;
+  opacity: 1;
+}
+
+.mat-drawer-inner-container, .mat-drawer {
+  background-color: #673ab7;
+  font-family: Quicksand;
+  color: white;
+}
+
 

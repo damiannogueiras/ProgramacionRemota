@@ -73,12 +73,13 @@ export class GridwbComponent {
           console.log('Respuesta express: ' + data.code + ', ' + data.puerto);
           // code = 0 es ejecución correcta
           if (data.code === 0){
+
             this.dialog.open(MessageComponent, {
               data: {
                 tipo: 'Info',
                 message:
                 // problemas con unsafe URL
-                'Ya puedes entrar en <a href="minodered">' + bancoSolicitado + '</a>',
+                'Ya puedes entrar en <a href="gridwb">' + bancoSolicitado + '</a>',
                 id: 'puedes'
               }
             });

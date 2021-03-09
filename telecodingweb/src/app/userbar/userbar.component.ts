@@ -19,6 +19,7 @@ export class UserbarComponent implements AfterViewChecked {
   public _t_remaining = '';
   public _wb;
 
+  showFiller = false;
 
   constructor(public miServDb: FireDBService,
               public miServAuth: FireAuthService,
@@ -33,7 +34,7 @@ export class UserbarComponent implements AfterViewChecked {
     this._wb = this.miServDb.getWbByMail(this.miServAuth.getEmail());
     this._nombreBanco = this._user.bancoNombre;
     this._puerto = this._user.banco.substr(2, this._user.banco.length);
-    this._keytopic = this._wb.userNodeRED;
+    //this._keytopic = this._wb.userNodeRED;
     this._t_remaining = this._wb.t_remaining;
 
   }

@@ -34,6 +34,7 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { MinoderedComponent } from './minodered/minodered.component';
 import { SafePipe } from './safe.pipe';
 import { UserbarComponent } from './userbar/userbar.component';
+import {MatTabsModule} from '@angular/material/tabs';
 
 @NgModule({
   declarations: [
@@ -45,28 +46,29 @@ import { UserbarComponent } from './userbar/userbar.component';
     SafePipe,
     UserbarComponent
   ],
-  imports: [
-    AppRoutingModule,
-    AngularFireModule.initializeApp(environment.firebaseConfig),
-    AngularFireDatabaseModule,
-    MatGridListModule,
-    MatCardModule,
-    MatIconModule,
-    MatButtonToggleModule,
-    BrowserAnimationsModule,
-    MatSliderModule,
-    MatToolbarModule,
-    MatSidenavModule,
-    MatListModule,
-    LayoutModule,
-    MatButtonModule,
-    MatMenuModule,
-    FlexLayoutModule,
-    MatDialogModule,
-    MatTooltipModule,
-    HttpClientModule,
-    BrowserModule
-  ],
+    imports: [
+        AppRoutingModule,
+        AngularFireModule.initializeApp(environment.firebaseConfig),
+        AngularFireDatabaseModule,
+        MatGridListModule,
+        MatCardModule,
+        MatIconModule,
+        MatButtonToggleModule,
+        BrowserAnimationsModule,
+        MatSliderModule,
+        MatToolbarModule,
+        MatSidenavModule,
+        MatListModule,
+        LayoutModule,
+        MatButtonModule,
+        MatMenuModule,
+        FlexLayoutModule,
+        MatDialogModule,
+        MatTooltipModule,
+        HttpClientModule,
+        BrowserModule,
+        MatTabsModule
+    ],
   providers: [],
   bootstrap: [AppComponent]
 })
