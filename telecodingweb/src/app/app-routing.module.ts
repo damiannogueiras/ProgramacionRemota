@@ -8,7 +8,7 @@ const routes: Routes = [
   { path: 'dashboard', component: DashboardComponent },
   { path: 'gridwb', component: GridwbComponent },
   { path: 'minodered', component: MinoderedComponent },
-  { path: '', redirectTo: '/gridwb', pathMatch: 'full' }
+  //{ path: '', redirectTo: '/', pathMatch: 'full' }
 ];
 
 @NgModule({

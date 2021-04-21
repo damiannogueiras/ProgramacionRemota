@@ -35,6 +35,7 @@ import { MinoderedComponent } from './minodered/minodered.component';
 import { SafePipe } from './safe.pipe';
 import { UserbarComponent } from './userbar/userbar.component';
 import {MatTabsModule} from '@angular/material/tabs';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 
 @NgModule({
   declarations: [
@@ -67,7 +68,8 @@ import {MatTabsModule} from '@angular/material/tabs';
         MatTooltipModule,
         HttpClientModule,
         BrowserModule,
-        MatTabsModule
+        MatTabsModule,
+        MatProgressSpinnerModule
     ],
   providers: [],
   bootstrap: [AppComponent]

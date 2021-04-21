@@ -1,49 +1,47 @@
 <mat-tab-group animationDuration="500ms">
-  <mat-tab>
-    <ng-template mat-tab-label>
-      <mat-icon class="tabicono" (click)="drawer.toggle()">vertical_split</mat-icon>
-      <span>Mi Node-RED</span>
-    </ng-template>
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <mat-icon class="tabicono" (click)="drawer.toggle()">vertical_split</mat-icon>
+        <span>Mi Node-RED</span>
+      </ng-template>
 
-    <mat-drawer-container class="userbar-container" autosize>
-      <mat-drawer #drawer class="userbar-sidenav" mode="side">
-        <div *ngFor="let workbench of miServDb.workbenchs | async">
-          <div *ngIf="workbench.payload.val().userLogueado === miServAuth.getEmail()" class="telecoding-typography">
-            <p>Puerto : {{this._puerto}}</p>
-            <p>keytopic : {{this._keytopic}}</p>
-            <p>tiempo restante :</p>
-            <p>{{this._t_remaining}}min.</p>
+      <mat-drawer-container class="userbar-container" autosize>
+        <mat-drawer #drawer class="userbar-sidenav" mode="side">
+          <div *ngFor="let workbench of miServDb.workbenchs | async">
+            <div *ngIf="workbench.payload.val().userLogueado === miServAuth.getEmail()" class="telecoding-typography">
+              <p>Puerto : </p>
+              <p>keytopic : </p>
+              <p>tiempo restante :</p>
+              <p></p>
+            </div>
           </div>
-        </div>
-        <button class="telecoding-typography" (click)="salir(miServDb.getUserByMail(miServAuth.getEmail()))" mat-raised-button>
-          <mat-icon>clear</mat-icon>Salir
-        </button>
-      </mat-drawer>
+          <button class="telecoding-typography" (click)="salir(miServDb.getUserByMail(miServAuth.getEmail()))" mat-raised-button>
+            <mat-icon>clear</mat-icon>Salir
+          </button>
+        </mat-drawer>
 
-      <div class="userbar-sidenav-content">
-        <app-minodered></app-minodered>
-      </div>
-    </mat-drawer-container>
-  </mat-tab>
-  <mat-tab>
-    <ng-template mat-tab-label>
-      <mat-icon class="tabicono" (click)="drawerCam.toggle()">video_camera_back</mat-icon>
-      <span>Mi Dashboard</span>
-    </ng-template>
-    <mat-drawer-container class="userbar-container" autosize>
-      <mat-drawer #drawerCam class="userbar-sidenav" mode="side">
-        <div *ngFor="let workbench of miServDb.workbenchs | async">
-          <div *ngIf="workbench.payload.val().userLogueado === miServAuth.getEmail()" class="telecoding-typography">
-            <p>Camara del workbench: URL</p>
+        <div class="userbar-sidenav-content">
+          <app-minodered></app-minodered>
+        </div>
+      </mat-drawer-container>
+    </mat-tab>
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <mat-icon class="tabicono" (click)="drawerCam.toggle()">video_camera_back</mat-icon>
+        <span>Mi Dashboard</span>
+      </ng-template>
+      <mat-drawer-container class="userbar-container" autosize>
+        <mat-drawer #drawerCam class="userbar-sidenav" mode="side">
+          <div *ngFor="let workbench of miServDb.workbenchs | async">
+            <div *ngIf="workbench.payload.val().userLogueado === miServAuth.getEmail()" class="telecoding-typography">
+              <p>Camara del workbench: URL</p>
+            </div>
           </div>
+        </mat-drawer>
+        <div class="userbar-sidenav-content">
+          <app-dashboard></app-dashboard>
         </div>
-      </mat-drawer>
-      <div class="userbar-sidenav-content">
-        <app-dashboard></app-dashboard>
-      </div>
-    </mat-drawer-container>
-  </mat-tab>
-
-
+      </mat-drawer-container>
+    </mat-tab>
 
 </mat-tab-group>

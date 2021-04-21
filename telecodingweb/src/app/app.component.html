@@ -31,16 +31,18 @@
       </mat-toolbar-row>
     </mat-toolbar>
 </div>
-  <!-- user bar -->
-  <div id="userbar" *ngIf="miServDb.isAtWB(miServAuth.getEmail());else grid">
-    <app-userbar></app-userbar>
-  </div>
+
   <!-- Contenedor secundario -->
-  <ng-template #grid>
-  <div id="grid">
-    <app-gridwb></app-gridwb>
-  </div>
-  </ng-template>
+    <!-- user bar -->
+    <div id="userbar" *ngIf="miServDb.isAtWB(miServAuth.getEmail());else grid">
+        <app-userbar></app-userbar>
+    </div>
+    <!-- grid de workbenchs -->
+    <ng-template #grid>
+    <div id="grid">
+      <app-gridwb></app-gridwb>
+    </div>
+    </ng-template>
 
   <!-- Footer  -->
   <div id="footer">
@@ -50,6 +52,8 @@
   </div>
 
 </div>
+
+
 
 
 

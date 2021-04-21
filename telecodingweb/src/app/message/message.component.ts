@@ -13,10 +13,9 @@ export class MessageComponent {
               @Inject(MAT_DIALOG_DATA) public data: any) {
   }
 
-// usamos pipe safe dataSanitizado = this.sanitizer.bypassSecurityTrustHtml(this.data.message);
-
   // boton de cerrar en el aviso
   public closeMe() {
     this.dialogRef.close();
+    location.reload();
   }
 }

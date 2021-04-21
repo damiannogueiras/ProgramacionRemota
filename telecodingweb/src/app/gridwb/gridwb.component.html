@@ -6,7 +6,6 @@
     fxLayoutGap="32px"
     fxLayoutAlign="flex-start"
     class="cardList" >
-      <!-- TODO    -->
       <ng-container *ngFor="let workbench of (miServDb.workbenchs | async)">
         <mat-card class="mat-elevation-z2 telecoding-typography"   *ngIf="workbench.payload.val().show">
         <mat-card-header>

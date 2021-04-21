@@ -66,7 +66,7 @@ export class GridwbComponent {
         '&user=' + this.miServAuth.getEmail() +
         '&avatar=' + this.miServAuth.getPhoto() +
         '&uid=' + this.miServAuth.getUID();
-      // console.log(_urlPeticion);
+      console.log(_urlPeticion);
       this.http.get<any>(_urlPeticion,
         {headers}).subscribe(
         data => {
@@ -74,15 +74,15 @@ export class GridwbComponent {
           // code = 0 es ejecución correcta
           if (data.code === 0){
 
-            this.dialog.open(MessageComponent, {
+           /* this.dialog.open(MessageComponent, {
               data: {
                 tipo: 'Info',
                 message:
-                // problemas con unsafe URL
+                // necesario para recargar la pagina
                 'Ya puedes entrar en <a href="gridwb">' + bancoSolicitado + '</a>',
                 id: 'puedes'
               }
-            });
+            });*/
             // reenviamos a mi nodered
           }
         },
@@ -114,7 +114,21 @@ export class GridwbComponent {
     });
   }
 
+  /**
+   * Devuelve si el banco tiene que aparecer en el grid
+   * @param workbench
+   * @return el banco tiene que aparecer en el grid
+   */
   showWB(workbench: any): boolean {
     return (workbench.payload.val().show);
+  }
+
+  /**
+   * Devuelve el status del banco
+   * @param workbench
+   * @return el satus
+   */
+  getSatusWB(workbench: any): String {
+    return (workbench.payload.val().status);
   }
 }

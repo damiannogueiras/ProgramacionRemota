@@ -276,4 +276,5 @@ export class FireDBService {
       return (this.getUserByMail(mail).banco !== '-');
     }
   }
+
 }

@@ -42,8 +42,7 @@ var db = require("./services/db-servers.js");
 // Rutas
 
 // TODO ---- SERVE STATIC FILES ANGULAR---- //
-//servidorExpress.use(express.static('.'));
-//servidorExpress.get("/hola", express.static('.', {maxAge: '1y'}));
+servidorExpress.use('/', express.static(__dirname + '/frontend'));
 
 // ---- SOLICITUD DE PUESTA EN MARCHA DE UN BANCO DE TRABAJO ---- //
 servidorExpress.get("/solicitud", cors(corsOptions), async (req, res) => {
@@ -74,7 +73,7 @@ servidorExpress.listen(_port, "0.0.0.0", () => {
  */
 function levantarNodeRED(bancoID, bancoNombre, uid, email, avatar) {
   let nombreInstancia = "nombreInstancia";
-  console.log("Start " + bancoID + " de " + email);
+  console.log("Levantando " + bancoID + " de " + email);
   let serverActual = getServerActual(bancoID);
   // comprobamos que no es un workbench, solo instancia nodered
   if (bancoID == NODORED_BANCOID) {
@@ -95,18 +94,17 @@ function levantarNodeRED(bancoID, bancoNombre, uid, email, avatar) {
       let bancoIDnuevo = serverActual + puertoWB;
       nombreInstancia = bancoIDnuevo;
       // creo nuevo WB
-      db.crearWB(bancoIDnuevo, uid, email, avatar, "busy");
+      db.crearWB(bancoIDnuevo, uid, email, avatar, "loading");
       db.actualizarUser(uid, bancoIDnuevo, bancoNombre);
-      // console.log("levanto nodered");
+      console.log("Levantado banco");
     } else {
-
      console.log("tienes que esperar");
     }
   } else {
     console.log("no es AA2000");
     nombreInstancia = bancoID;
     puertoWB = getPuertoBanco(bancoID);
-    db.actualizarWB(bancoID, email, avatar, "busy");
+    db.actualizarWB(bancoID, email, avatar, "loading");
     db.actualizarUser(uid, bancoID, bancoNombre);
   }
 
@@ -133,8 +131,10 @@ function levantarNodeRED(bancoID, bancoNombre, uid, email, avatar) {
   // nodo inicial
   // argsNodeRED = argsNodeRED + ' flow' + bancoID + '.json';
   pm2_start = 'pm2 start node-red --name ' + nombreInstancia + ' -- ' + argsNodeRED;
-  // console.log(pm2_start);
-  return ejecutarComando(pm2_start);
+  console.log(pm2_start);
+  let result = ejecutarComando(pm2_start);
+  if (result === 0) db.actualizarStatusWB(nombreInstancia, 'busy');
+  return result;
 }
 
 /**
@@ -156,6 +156,7 @@ function stopNodeRED(UID, bancoID){
 
   if(bancoID == db.getWBbyUID(UID) || UID === 'admin'){
     if (UID === 'admin') UID = db.getUIDbyWB(bancoID);
+    console.log(UID);
     let serverActual = getServerActual(bancoID);
     // comando a ejecutar
     let pm2_stop = 'pm2 delete ' + bancoID;
@@ -186,11 +187,12 @@ function stopNodeRED(UID, bancoID){
 /**
  * ejecuto comando
  * @param comando python a ejecutar
+ * @return 0 si todo va bien
  */
 function ejecutarComando(comando) {
   let options = {shell: true};
   const ret = spawnSync(comando, null, options);
-  console.log("Salida ejecutar comando:" + ret.status);
+  console.log("Salida ejecutar comando: " + ret.status);
   return ret.status;
 }
 

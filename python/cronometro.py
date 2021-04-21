@@ -105,12 +105,12 @@ for wb in wbs.each():
     # print(wb.key())
     # datos del banco
     banco = wb.val()
-    # print(wb.val())
+    print(wb.val())
     # descontamos 1 minuto si hay tiempo que descontar
     if (banco['t_remaining'] > 0):
         banco['t_remaining'] = banco['t_remaining'] - 1
         db.child("workbenchs").child(wb.key()).update({"t_remaining": banco['t_remaining']})
     # si el tiempo llega a cero, liberamos el banco y reseteamos tiempo remanente
     else:
-        # TODO llamada a express para pararlo o desde aqui?
+        # llamada a express para pararlo
         r = requests.get('http://localhost:4100/cierre/?uid=admin&bancoid=' + wb.key())

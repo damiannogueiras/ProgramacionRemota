@@ -1,5 +1,3 @@
-
-
 /**
  * Utilizamos la service account para entornos de servidores
  * https://console.cloud.google.com/iam-admin/serviceaccounts/details/112294775774598014073?authuser=0&project=programacionremota
@@ -57,7 +55,7 @@ refWbs.on("value", function(snapshot) {
 refUsers.on("value", function(snapshot) {
   users = snapshot.val();
   //console.log(snapshot.val());
-  //console.log(users);
+  console.log(users);
 }, function (errorObject) {
   console.log("La lectura servidores realtime fallo: " + errorObject.code);
 });
@@ -88,7 +86,7 @@ const getMaxInst = (serverActual) => {
 exports.getMaxInst = getMaxInst;
 
 /**
- * Acceso a WB
+ * Actualiza WB
  */
 const actualizarWB = (bancoID, email, avatar, status) => {
   refWbs.child(bancoID).update(
@@ -102,6 +100,18 @@ const actualizarWB = (bancoID, email, avatar, status) => {
   );
 };
 exports.actualizarWB = actualizarWB;
+
+/**
+ * Actualiza status WB
+ */
+const actualizarStatusWB = (bancoID, status) => {
+  refWbs.child(bancoID).update(
+    {
+      status: status
+    }
+  );
+};
+exports.actualizarStatusWB = actualizarStatusWB;
 
 /**
  * crear a WB
@@ -119,9 +129,9 @@ const crearWB = (bancoID, uid, email, avatar, status) => {
       nombre: 'Node-RED',
       pass: 1234,
       photo: 'https://firebasestorage.googleapis.com/v0/b/programacionremota.appspot.com/o/imagenes%2FAA00.png?alt=media&token=6242714d-6649-4470-8ba5-11f1aa620497',
-      status: 'busy',
-      t_remaining: 120,
-      t_total: 120,
+      status: status,
+      t_remaining: 1200,
+      t_total: 1200,
       userUIDLogueado: uid,
       userNodeRED: 'yoda',
     }
@@ -190,8 +200,21 @@ const getWBbyUID = (UID) => {
 }
 exports.getWBbyUID = getWBbyUID;
 
+/**
+ * obtiene el UID del usuario segun el banco
+ * @param banco
+ * @return UID usuario
+ */
 const getUIDbyWB = (bancoID) => {
-  return wbs[bancoID].userUIDLogueado;
+  var _index = -1;
+  let _email = wbs[bancoID].userLogueado;
+  var filter = users.find(function (item, i){
+    if(item.mail===_email) {
+      _index = i;
+      return i;
+    }
+  })
+  return _index;
 }
 exports.getUIDbyWB = getUIDbyWB;
 
