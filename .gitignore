@@ -4,6 +4,9 @@ telecoding/angular.json
 telecoding/package.json
 express/environments/*.json
 telecodingweb/express/probas.js
+telecodingweb/express/log
+telecodingweb/express/pid
+telecodingweb/express/frontend
 ProgramacionRemota.wiki/
 node-red/
 python/
@@ -14,4 +17,6 @@ telecodingweb/node_modules/
 telecodingweb/package-lock.json
 telecodingweb/package-lock.json.imac
 telecodingweb/package.json.imac
-programacionremota-export.json
+Tasmota
+esp32cam
+ProgramacionRemota.wiki
