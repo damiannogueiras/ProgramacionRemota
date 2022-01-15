@@ -42,7 +42,7 @@ refAvatares.on("value", function(snapshot) {
 // Actualizacion de los puertos libres
 refServers.child("AA").child("portsWBNode").on("value", function(snapshot) {
   portsWBNode = snapshot.val();
-  //console.log(portsWBNode);
+  console.log(portsWBNode);
 }, function (errorObject) {
   console.log("La lectura servidores realtime fallo: " + errorObject.code);
 });
@@ -55,7 +55,7 @@ refWbs.on("value", function(snapshot) {
 refUsers.on("value", function(snapshot) {
   users = snapshot.val();
   //console.log(snapshot.val());
-  console.log(users);
+  //console.log(users);
 }, function (errorObject) {
   console.log("La lectura servidores realtime fallo: " + errorObject.code);
 });
@@ -88,10 +88,11 @@ exports.getMaxInst = getMaxInst;
 /**
  * Actualiza WB
  */
-const actualizarWB = (bancoID, email, avatar, status) => {
+const actualizarWB = (bancoID, email, userUIDLogueado, avatar, status) => {
   refWbs.child(bancoID).update(
     {
       userLogueado: email,
+      userUIDLogueado: userUIDLogueado,
       avatar: avatar,
       t_remaining: 120,
       t_total: 120,
@@ -130,8 +131,8 @@ const crearWB = (bancoID, uid, email, avatar, status) => {
       pass: 1234,
       photo: 'https://firebasestorage.googleapis.com/v0/b/programacionremota.appspot.com/o/imagenes%2FAA00.png?alt=media&token=6242714d-6649-4470-8ba5-11f1aa620497',
       status: status,
-      t_remaining: 1200,
-      t_total: 1200,
+      t_remaining: 120,
+      t_total: 120,
       userUIDLogueado: uid,
       userNodeRED: 'yoda',
     }
@@ -173,7 +174,7 @@ exports.actualizarUser = actualizarUser;
  * @return indice del primer puerto libre
  */
 const getPrimeroLibre = () => {
-  // console.log("Primero libre:" + portsWBNode.indexOf(0));
+  console.log("Primero libre:" + portsWBNode.indexOf(0));
   return portsWBNode.indexOf(0);
 }
 exports.getPrimeroLibre = getPrimeroLibre;
@@ -182,11 +183,11 @@ exports.getPrimeroLibre = getPrimeroLibre;
  * rellena con 1/0 el puerto levantado
  */
 const setPuerto = (serverActual, puerto, value) => {
-  // console.log("Puerto a 1: " + puerto);
+  console.log("Puerto a 1: " + puerto);
   let indice = puerto - 2000;
   portsWBNode[indice] = value;
   refServers.child(serverActual).child("portsWBNode").set(portsWBNode);
-  // console.log(portsWBNode);
+  console.log("Puertos: " + portsWBNode);
 }
 exports.setPuerto = setPuerto;
 
@@ -206,15 +207,7 @@ exports.getWBbyUID = getWBbyUID;
  * @return UID usuario
  */
 const getUIDbyWB = (bancoID) => {
-  var _index = -1;
-  let _email = wbs[bancoID].userLogueado;
-  var filter = users.find(function (item, i){
-    if(item.mail===_email) {
-      _index = i;
-      return i;
-    }
-  })
-  return _index;
+  return wbs[bancoID].userUIDLogueado;
 }
 exports.getUIDbyWB = getUIDbyWB;
 

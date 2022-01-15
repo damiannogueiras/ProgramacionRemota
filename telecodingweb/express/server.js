@@ -163,7 +163,7 @@ function stopNodeRED(UID, bancoID){
     // si paramos la instancia actualizamos datos firebase
     if(ejecutarComando(pm2_stop) === 0 || ejecutarComando(pm2_stop) === 1) {
       db.actualizarUser(UID, '-', '-');
-      db.actualizarWB(bancoID, '-', db.getAvatarRand(), 'free');
+      db.actualizarWB(bancoID, '-', '-', db.getAvatarRand(), 'free');
       // resto uno a las instancias
       let unomenos = db.getNroInst(serverActual) - 1;
       let nuevovalor = {nroInst: unomenos};
