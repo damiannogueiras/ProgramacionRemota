@@ -11,21 +11,9 @@
     }
   },
   "users" : {
-    "3hEuUivL0vPWi83YJJh1ZLNUaWw2" : {
-      "banco" : "-",
-      "bancoNombre" : "-",
-      "mail" : "damiannogueiras@gmail.com",
-      "photoURL" : "https://lh3.googleusercontent.com/a-/AOh14GjzX5Usqcg_bwdCNhXEl0UZxNJqXGGF6WdIi0vvRg"
-    },
     "admin" : {
       "banco" : "-",
       "bancoNombre" : "-"
-    },
-    "ew0stSRuyHOTpRHgFteBwSvqhHM2" : {
-      "banco" : "-",
-      "bancoNombre" : "-",
-      "mail" : "damian@danielcastelao.org",
-      "photoURL" : "https://lh3.googleusercontent.com/a-/AOh14GjBbPv4jKG9pgD18c4ucx1IMm7IqhtwHt8UE0eM"
     }
   },
   "workbenchs" : {
