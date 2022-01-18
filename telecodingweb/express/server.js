@@ -140,7 +140,7 @@ function levantarNodeRED(bancoID, bancoNombre, uid, email, avatar) {
 /**
  * Ejecuta comandos para parar instancia de node-RED
  * Comprueba que el usuario que solicita es el que está en el banco
- * Actuliza firebase
+ * Actualiza firebase
  *   registro del usuario
  *   registro del workbench
  *   resta uno a las instancias
@@ -155,8 +155,9 @@ function stopNodeRED(UID, bancoID){
   // o es admin (el cronometro)
 
   if(bancoID == db.getWBbyUID(UID) || UID === 'admin'){
+    // el que cierra es admin
     if (UID === 'admin') UID = db.getUIDbyWB(bancoID);
-    console.log(UID);
+    console.log("UID:" + UID);
     let serverActual = getServerActual(bancoID);
     // comando a ejecutar
     let pm2_stop = 'pm2 delete ' + bancoID;
@@ -164,7 +165,7 @@ function stopNodeRED(UID, bancoID){
     if(ejecutarComando(pm2_stop) === 0 || ejecutarComando(pm2_stop) === 1) {
       db.actualizarUser(UID, '-', '-');
       db.actualizarWB(bancoID, '-', '-', db.getAvatarRand(), 'free');
-      // resto uno a las instancias
+      // resto 1 a las instancias
       let unomenos = db.getNroInst(serverActual) - 1;
       let nuevovalor = {nroInst: unomenos};
       db.actualizoServer(serverActual, nuevovalor);
