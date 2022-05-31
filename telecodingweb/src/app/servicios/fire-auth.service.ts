@@ -60,9 +60,10 @@ export class FireAuthService {
   // salimos
   logout() {
     console.log('logout!');
+    // borramos la sesion de google
     this.miAuth.signOut();
-    // TODO pasarlo a express
-    this.miDB.bajausuario(this.currentUser.uid);
+    // pedimos borrar los datos de la base de datos
+    this.miDB.bajausuario(this.currentUser.uid, this.currentUser.email);
   }
 
   // esta logueado?

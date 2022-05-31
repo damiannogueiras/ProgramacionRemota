@@ -3,11 +3,14 @@ import {Injectable, OnInit} from '@angular/core';
 // las clases para trabajar con bases de datos
 import {AngularFireDatabase, AngularFireList} from '@angular/fire/database';
 
+import {HttpClientService} from './httpClient.service';
+
 import {BehaviorSubject, Observable, Subject} from 'rxjs';
 import {switchMap} from 'rxjs/operators';
 import {IUsers} from '../interfaces/users';
 import {IWbs} from '../interfaces/wbs';
 import {IServers} from '../interfaces/servers';
+
 
 @Injectable({
   providedIn: 'root'
@@ -29,6 +32,8 @@ export class FireDBService {
   serverArray: IServers[];
   userArray: IUsers[];
   workbenchsArray: IWbs[] = [];
+
+
 
   /*avatarList: Array<string> = [
     'https://ssl.gstatic.com/docs/common/profile/alligator_lg.png',
@@ -98,7 +103,8 @@ export class FireDBService {
    * Constructor de la clase
    * db objeto para manejar datos en la Database RealTime
    */
-  constructor(public miDB: AngularFireDatabase) {
+  constructor(public miDB: AngularFireDatabase,
+              public miHttp: HttpClientService) {
 
     // recuperamos los usuarios y estamos pendiente de los cambios
     this.users = miDB.list('users').valueChanges().pipe(
@@ -187,14 +193,17 @@ export class FireDBService {
 
   /**
    * Borra la entrada segun el UID del usuario
-   * Lo quita de los bancos?
+   * Usamos express, igual que el cronometro, metodo get
+   * Lo quita de los bancos
    * @param uidBorrar uid del usuario logueado
+   * @param email para obtener el banco en el que esta
    */
-  bajausuario(uidBorrar: string) {
-    // ¿borra entrada?
-    // si el usuario está trabajando y por error sale de la sesion
-    // lo hechamos del banco o ¿solo contamos el tiempo?
-    // this.db.object('users/' + uidBorrar).remove();
+  bajausuario(uid: string, email: string) {
+    // buscamos en que banco esta
+    let bancoid = this.getUserByMail(email).banco;
+    console.log("Pidiendo borrar " + uid + " " + bancoid);
+    // llamamos al servicio http client para que haga la petición al express
+    this.miHttp.getExpressBorrar(this.getDominio(bancoid), this.getPortExpress(bancoid), uid, bancoid);
   }
 
   /**
