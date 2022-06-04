@@ -11,7 +11,7 @@ import { AngularFireModule } from '@angular/fire';
 import { AngularFireDatabaseModule} from '@angular/fire/database';
 import { environment } from '../environments/environment';
 
-// css
+// otros modulos
 import { MatCardModule } from '@angular/material/card';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatIconModule } from '@angular/material/icon';
@@ -28,14 +28,15 @@ import { FlexLayoutModule} from '@angular/flex-layout';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatTooltipModule } from '@angular/material/tooltip';
 
-import { HttpClientModule } from '@angular/common/http';
 import { BrowserModule } from '@angular/platform-browser';
+import { HttpClientModule } from '@angular/common/http';
+
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { MinoderedComponent } from './minodered/minodered.component';
 import { SafePipe } from './safe.pipe';
 import { UserbarComponent } from './userbar/userbar.component';
-import {MatTabsModule} from '@angular/material/tabs';
-import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import { MatTabsModule} from '@angular/material/tabs';
+import { MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 
 @NgModule({
   declarations: [
@@ -66,8 +67,8 @@ import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
         FlexLayoutModule,
         MatDialogModule,
         MatTooltipModule,
-        HttpClientModule,
         BrowserModule,
+        HttpClientModule,
         MatTabsModule,
         MatProgressSpinnerModule
     ],

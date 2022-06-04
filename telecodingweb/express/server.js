@@ -17,7 +17,8 @@ const _port = 4100;
 // puerto del primer banco de nodered
 const _portFirstNode = 2000;
 const NODORED_BANCOID = "AA2000";
-const _dominio = "remote.danielcastelao.org";
+// TODO este dato varia segun el banco solicitado
+const _dominio = "192.168.1.250";
 const _homeNodesRED = '/home/pi/ProgramacionRemota/node-red';
 // puerto del workbench
 var puertoWB = 0;
@@ -42,7 +43,13 @@ var db = require("./services/db-servers.js");
 // Rutas
 
 // TODO ---- SERVE STATIC FILES ANGULAR---- //
-servidorExpress.use('/', express.static(__dirname + '/frontend'));
+// servidorExpress.use('/', express.static('../frontend'));
+
+// COMPROBACION QUE ESTA CORRRIENDO
+servidorExpress.get("/", cors(corsOptions), async (req, res) => {
+  res.send("OK");
+});
+
 
 // ---- SOLICITUD DE PUESTA EN MARCHA DE UN BANCO DE TRABAJO ---- //
 servidorExpress.get("/solicitud", cors(corsOptions), async (req, res) => {
@@ -104,10 +111,9 @@ function levantarNodeRED(bancoID, bancoNombre, uid, email, avatar) {
     console.log("no es AA2000");
     nombreInstancia = bancoID;
     puertoWB = getPuertoBanco(bancoID);
-    db.actualizarWB(bancoID, email, avatar, "loading");
+    db.actualizarWB(bancoID, email, uid, avatar);
     db.actualizarUser(uid, bancoID, bancoNombre);
   }
-
 
   /* comando para ejecutar node-red con pm2
    * pm2 start script
@@ -164,7 +170,8 @@ function stopNodeRED(UID, bancoID){
     // si paramos la instancia actualizamos datos firebase
     if(ejecutarComando(pm2_stop) === 0 || ejecutarComando(pm2_stop) === 1) {
       db.actualizarUser(UID, '-', '-');
-      db.actualizarWB(bancoID, '-', '-', db.getAvatarRand(), 'free');
+      db.actualizarWB(bancoID, '-', '-', db.getAvatarRand());
+      db.actualizarStatusWB(bancoID, 'free');
       // resto 1 a las instancias
       let unomenos = db.getNroInst(serverActual) - 1;
       let nuevovalor = {nroInst: unomenos};

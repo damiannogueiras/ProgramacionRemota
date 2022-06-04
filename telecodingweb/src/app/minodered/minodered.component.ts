@@ -1,5 +1,8 @@
 import {Component, OnInit} from '@angular/core';
 
+import { Observable, throwError } from 'rxjs';
+import { map, catchError} from 'rxjs/operators';
+
 import {FireAuthService} from '../servicios/fire-auth.service';
 import {FireDBService} from '../servicios/fire-db.service';
 import {HttpClient} from '@angular/common/http';
@@ -24,48 +27,62 @@ export class MinoderedComponent{
   }
 
   /**
-   * crea la url segun el puerto del nodered
+   * crea la url segun el puerto del nodered y el servidor
    */
   createURL(){
     // console.log("[MiNodeRed] create url");
+    let _URL = "";
     if (this.miServDb.isAtWB(this.miServAuth.getEmail())){
       const banco = this.miServDb.getUserByMail(this.miServAuth.getEmail()).banco;
+      const dominio = this.miServDb.getDominio(banco);
       const puerto = banco.substr(2, banco.length);
-      // console.log("[minored]" + 'http://programacionremota.danielcastelao.org:' + puerto);
-      return 'http://remote.danielcastelao.org:' + puerto;
+      _URL = 'http://' + dominio + ':' + puerto;
+      // console.log("[minored] " + _URL);
     } else {
-      return null;
-      // console.log("[minodered]No estas en ningun ");
+      // console.log("[minodered] No estas en ningun banco");
     }
+
+    return _URL;
+  }
+
+
+  //traigo una url
+  getURL(url: string): Observable<any> {
+    return this.http.get(url)
   }
 
   /**
    * Comprueba que el nodered está listo para ser usado
-   * actualiza la variable noderedReady
+   * actualiza la variable noderedReady this.createURL()
    */
   isNodeREDReady(): boolean {
     if (!this.noderedReady) {
-      // console.log("Compruebo link");
-      this.http
-        .get<any>(this.createURL(), {observe: 'response'})
+      // console.log("Compruebo nodeRed funcionando");
+      this.getURL(this.createURL())
         .subscribe(
-        error => {
-            console.log('Error: ' + error.status);
-            if( error.status === 200 ) {
-              this.noderedReady = true;
-            } else {
-              this.noderedReady = false;
+          (response) => {
+            console.log('RESPONSE');
+            //this.noderedReady = true;
+          },
+          (error) => {
+            // console.log('Error: ' + error.status);
+            switch (error.status) {
+              case 0:
+                this.noderedReady = false;
+                break;
+              case 200:
+                this.noderedReady = true;
+                break;
+              default:
+                this.noderedReady = false;
+                break;
             }
-        },
-          response => {
-          console.log('Response ' + response.status);
-            if( response.status === 200 ) {
-              this.noderedReady = true;
-            } else {
-              this.noderedReady = false;
-            }
+          },
+          () => {
+            console.log('COMPLETADO');
+            this.noderedReady = true;
           }
-          );
+        );
     }
     return this.noderedReady;
   }

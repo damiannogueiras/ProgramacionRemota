@@ -23,12 +23,16 @@ export class DashboardComponent {
               public miServAuth: FireAuthService) {}
 
   createURL() {
+    // console.log("[dash] create url");
+    let _URL = "";
     if (this.miServDb.isAtWB(this.miServAuth.getEmail())) {
       const banco = this.miServDb.getUserByMail(this.miServAuth.getEmail()).banco;
+      const dominio = this.miServDb.getDominio(banco);
       const puerto = banco.substr(2, banco.length);
-      return 'http://remote.danielcastelao.org:' + puerto + '/ui';
+      _URL = 'http://' + dominio + ':' + puerto + '/ui';
     } else {
-      return '';
+      // console.log("[dash] No estas en ningun banco");
     }
+    return _URL;
   }
 }

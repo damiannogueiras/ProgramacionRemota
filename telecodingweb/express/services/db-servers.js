@@ -88,15 +88,14 @@ exports.getMaxInst = getMaxInst;
 /**
  * Actualiza WB
  */
-const actualizarWB = (bancoID, email, userUIDLogueado, avatar, status) => {
+const actualizarWB = (bancoID, email, userUIDLogueado, avatar) => {
   refWbs.child(bancoID).update(
     {
       userLogueado: email,
       userUIDLogueado: userUIDLogueado,
       avatar: avatar,
       t_remaining: 120,
-      t_total: 120,
-      status: status
+      t_total: 120
     }
   );
 };
