@@ -1,0 +1,41 @@
+.choose {
+  padding: 10px;
+  margin-top: 0px;
+  color: whitesmoke;
+  text-align: center;
+  background-color: #673ab7;
+}
+
+
+.circular {
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  padding: 3px;
+  background: cadetblue;
+}
+
+.img {
+  width: 100%;
+  margin-bottom: 18%;
+}
+.card-picture {
+  height: 100px;
+  width: auto;
+  margin: inherit;
+}
+.cardList > * {
+  box-sizing: border-box;
+  margin-bottom: 64px;
+  margin-left: 32px;
+  margin-right: 32px;
+  background-color: aliceblue;
+}
+
+.fondo {
+  background-color: aliceblue;
+}
+
+.icon-15x {
+  transform: scale(1.5);
+}

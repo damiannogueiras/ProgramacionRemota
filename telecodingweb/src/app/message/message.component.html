@@ -1,0 +1,9 @@
+<div>
+  <h1  mat-dialog-title class="telecoding-typography">{{data.tipo}}</h1>
+  <mat-dialog-content class="telecoding-typography" [innerHTML]="data.message | safe :'html'"></mat-dialog-content>
+  <mat-dialog-actions align="center">
+    <button  class="telecoding-typography" mat-raised-button (click)="closeMe()">
+      <a style="color: black" href="gridwb">Close</a>
+    </button>
+  </mat-dialog-actions>
+</div>

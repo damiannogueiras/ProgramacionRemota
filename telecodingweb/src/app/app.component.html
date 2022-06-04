@@ -1,0 +1,59 @@
+<div id="wrapper" class="telecoding-typography">
+  <!-- Cabecera -->
+  <div id="header" class="mat-elevation-z10">
+    <mat-toolbar color="primary" class=" mat-elevation-z20 telecoding-typography">
+      <mat-toolbar-row>
+        <span>
+          <a routerLink="/gridwb" title="choose workbench">
+            <svg height="24" data-name="Logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1390 1010">
+              <rect width="400" height="400" fill="none"/>
+              <g id="layer101" fill="aliceblue" stroke="none">
+                <path
+                  d="M103 918 c-46 -49 -63 -90 -63 -153 0 -67 20 -119 62 -162 l32 -33 465 0 465 0 -36 38 c-46 46 -68 98 -68 157 0 55 19 97 68 148 l36 37 -465 0 -465 0 -31 -32z"/>
+                <path
+                  d="M362 403 c46 -47 68 -99 68 -158 0 -55 -19 -97 -68 -147 l-36 -38 465 0 465 0 31 32 c46 49 63 90 63 153 0 67 -20 119 -62 163 l-32 32 -465 0 -465 0 36 -37z"/>
+              </g>
+            </svg>
+            Programación Remota
+          </a>
+      </span>
+        <span class="spacer"></span>
+      <span >
+          <div class="telecoding-typography" *ngIf="(miServAuth.miAuth.user | async) as obs; else login">
+            Hola, {{obs.displayName}}
+            <button class="mat-raised-button telecoding-typography" (click)="miServAuth.logout()">Salir</button>
+          </div>
+          <ng-template #login>
+            <button  class="mat-raised-button telecoding-typography" (click)="miServAuth.glogin()">
+              <i class="fab fa-google"></i> Entrar</button>
+          </ng-template>
+      </span>
+      </mat-toolbar-row>
+    </mat-toolbar>
+</div>
+
+  <!-- Contenedor secundario -->
+    <!-- user bar -->
+    <div id="userbar" *ngIf="miServDb.isAtWB(miServAuth.getEmail());else grid">
+        <app-userbar></app-userbar>
+    </div>
+    <!-- grid de workbenchs -->
+    <ng-template #grid>
+    <div id="grid">
+      <app-gridwb></app-gridwb>
+    </div>
+    </ng-template>
+
+  <!-- Footer  -->
+  <div id="footer">
+    <mat-toolbar color="primary">
+      <a class="footer telecoding-typography" href="https://github.com/damiancastelao/ProgramacionRemota" target="_blank" rel="noopener"> ¿ Quieres colaborar o hacer tu propio sistema de Programación Remota ? Repo en Github</a>
+    </mat-toolbar>
+  </div>
+
+</div>
+
+
+
+
+

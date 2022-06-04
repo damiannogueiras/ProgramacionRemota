@@ -1,0 +1,47 @@
+@import '~@angular/material/theming';
+
+// Include non-theme styles for core.
+@include mat-core();
+
+// Define a theme.
+$primary: mat-palette($mat-deep-purple);
+$accent:  mat-palette($mat-amber, A200, A100, A400);
+
+$theme: mat-light-theme($primary, $accent);
+
+// Include all theme styles for the components.
+@include angular-material-theme($theme);
+
+// afecta a todos los componentes
+.telecoding-typography {
+  font-family: Quicksand
+}
+
+button {
+  border-width: 0px;
+  border-radius: 10px;
+}
+
+a, a:visited {
+  color: white;
+  font-family: Quicksand;
+}
+
+a:focus, a:hover {
+  color: #5f9ea0;
+  text-decoration-line: none;
+}
+
+.mat-tab-label, .mat-tab-link {
+  font-family: Quicksand;
+  color: white;
+  opacity: 1;
+}
+
+.mat-drawer-inner-container, .mat-drawer {
+  background-color: #673ab7;
+  font-family: Quicksand;
+  color: white;
+}
+
+
