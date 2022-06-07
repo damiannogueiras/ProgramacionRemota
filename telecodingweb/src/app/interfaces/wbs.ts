@@ -15,4 +15,5 @@ export interface IWbs {
   'userLogueado': string;
   'userNodeRED': string;
   'userUIDLogueado': string;
+  'camera': string
 }

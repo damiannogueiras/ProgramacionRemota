@@ -4,6 +4,7 @@ import { FireAuthService } from '../servicios/fire-auth.service';
 // comunicacion con el servidor express
 import {HttpClient} from '@angular/common/http';
 import {MatDialog} from '@angular/material/dialog';
+import {IWbs} from "../interfaces/wbs";
 
 @Component({
   selector: 'app-userbar',
@@ -53,5 +54,16 @@ export class UserbarComponent {
    */
   tiempoRestante() {
     return this.miServDb.getWbByMail(this.miServAuth.getEmail()).t_remaining
+  }
+
+  /**
+   * URl de la camara
+   * @param WB
+   * @return URL camera
+   */
+  getURLcamera() {
+    let _url = this.miServDb.getWbByMail(this.miServAuth.getEmail()).camera + "/stream"
+    // console.log("[userbar] " + _url)
+    return _url
   }
 }

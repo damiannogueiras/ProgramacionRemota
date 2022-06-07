@@ -27,7 +27,11 @@
                 </a></p>
               </mat-card-content>
           </mat-card>
-          <br>
+          <div>
+            <p>Camara</p>
+            <iframe [src]="getURLcamera() | safe: 'resourceUrl'" width="320px" height="240px"></iframe>
+            <p>{{getURLcamera()}}<p>
+          </div>
           <div>
             <button class="telecoding-typography" (click)="salir(miServDb.getUserByMail(miServAuth.getEmail()))" mat-raised-button>
               <mat-icon>clear</mat-icon>Salir del banco
@@ -50,12 +54,11 @@
       </ng-template>
       <mat-drawer-container class="userbar-container" autosize>
         <mat-drawer #drawerCam class="userbar-sidenav" mode="side" opened="true">
-          <div *ngFor="let workbench of miServDb.workbenchs | async">
-            <div *ngIf="workbench.payload.val().userLogueado === miServAuth.getEmail()" class="telecoding-typography">
-              <p>Camara</p>
-              <iframe src="http://remote.danielcastelao.org:20101/stream" width="320px" height="240px"></iframe>
+              <div>
+                <p>Camara</p>
+                <iframe [src]="getURLcamera() | safe: 'resourceUrl'" width="320px" height="240px"></iframe>
+                <p>{{getURLcamera()}}<p>
             </div>
-          </div>
         </mat-drawer>
         <div class="userbar-sidenav-content">
           <app-dashboard></app-dashboard>
