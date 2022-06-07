@@ -18,7 +18,7 @@ const _port = 4100;
 const _portFirstNode = 2000;
 const NODORED_BANCOID = "AA2000";
 // TODO este dato varia segun el banco solicitado
-const _dominio = "192.168.1.250";
+const _dominio = "remote.danielcastelao.org";
 const _homeNodesRED = '/home/pi/ProgramacionRemota/node-red';
 // puerto del workbench
 var puertoWB = 0;
@@ -37,6 +37,7 @@ servidorExpress.use(compression());
 
 // modulo child_process para ejecutar comandos del sistema
 var spawnSync = require('child_process').spawnSync;
+var spawn = require('child_process').spawn;
 
 var db = require("./services/db-servers.js");
 
@@ -49,6 +50,26 @@ var db = require("./services/db-servers.js");
 servidorExpress.get("/", cors(corsOptions), async (req, res) => {
   res.send("OK");
 });
+
+// pruebas de sincronismo
+servidorExpress.get("/sync", cors(corsOptions), async (req, res) => {
+  try {
+    const resultado = await funcionQueTarda()
+    res.json(resultado)
+  } catch(error) {
+    console.log(error)
+  }
+});
+
+// para pruebas de sincronismo
+function funcionQueTarda() {
+  let n = 0;
+  for (var i=0; i<100000; i++) {
+    n += i;
+    console.log(i);
+  }
+    return "{\"code\":\"22\"}";
+}
 
 
 // ---- SOLICITUD DE PUESTA EN MARCHA DE UN BANCO DE TRABAJO ---- //
@@ -139,8 +160,9 @@ function levantarNodeRED(bancoID, bancoNombre, uid, email, avatar) {
   pm2_start = 'pm2 start node-red --name ' + nombreInstancia + ' -- ' + argsNodeRED;
   console.log(pm2_start);
   let result = ejecutarComando(pm2_start);
+  console.log("Resultado pm2: " + result)
   if (result === 0) db.actualizarStatusWB(nombreInstancia, 'busy');
-  return result;
+  return 0;
 }
 
 /**
@@ -154,6 +176,7 @@ function levantarNodeRED(bancoID, bancoNombre, uid, email, avatar) {
  *   borra workbench
  * @param UID key del usuario que solicita el cierre
  * @param bancoID banco de trabajo, instancia de node-RED
+ * @return 0 resultado ok, -2 error, -1 no estas en ese banco
  */
 function stopNodeRED(UID, bancoID){
   console.log("Delete " + bancoID + " por " + UID);
@@ -183,8 +206,8 @@ function stopNodeRED(UID, bancoID){
         // libero puerto
         db.setPuerto(serverActual, getPuertoBanco(bancoID), PUERTO_LIBRE);
       }
-    } else return -2;
-    return 0;
+    } else return -2; // hubo un error al ejecutar el comando
+    return 0; // resultado ok
   } else {
     console.log("No estas en ese banco");
     return -1;
@@ -200,8 +223,27 @@ function stopNodeRED(UID, bancoID){
 function ejecutarComando(comando) {
   let options = {shell: true};
   const ret = spawnSync(comando, null, options);
+
   console.log("Salida ejecutar comando: " + ret.status);
   return ret.status;
+
+  /* TODO: manejar diferentes salidas
+
+    ret.stdout.on('data', (data) => {
+    console.log(`SPAWN: sacando por stdout`)
+  })
+  ret.stderr.on('data', (data) => {
+    console.error(`SPAWN: stderr: ${data}`);
+    console.log("SPAWN: Salida ejecutar comando: " + data);
+    return data;
+  });
+
+  ret.on('close', (code) => {
+    console.log(`SPAWN: child process exited with code ${code}`);
+    console.log("SPAWN: Salida ejecutar comando: " + code);
+    return code;
+  });*/
+
 }
 
 /**

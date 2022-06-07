@@ -1,14 +1,13 @@
-import {Component, OnInit} from '@angular/core';
-
+import {Component} from '@angular/core';
+// dialogos modales
 import {MessageComponent} from '../message/message.component';
 import {MatDialog} from '@angular/material/dialog';
-
 // comunicacion con el servidor express
 import {HttpClient} from '@angular/common/http';
+import { HttpHeaders} from '@angular/common/http';
 // servicios de auth y acceso a db
 import {FireAuthService} from '../servicios/fire-auth.service';
 import {FireDBService} from '../servicios/fire-db.service';
-
 
 @Component({
   selector: 'app-gridwb',
@@ -25,9 +24,7 @@ export class GridwbComponent {
   constructor(public miServDb: FireDBService,
               public miServAuth: FireAuthService,
               private dialog: MatDialog,
-              private http: HttpClient) {
-  }
-
+              private http: HttpClient) {}
 
   /**
    * Solicitud de entrada a un banco
@@ -41,24 +38,18 @@ export class GridwbComponent {
     // recojo dominio
     this._express = this.miServDb.getDominio(bancoIDSolicitado);
     this._portExpress = this.miServDb.getPortExpress(bancoIDSolicitado);
-    // console.log(this._portExpress);
+
     // comprobamos si esta en un banco
     if (bancoUsuario !== '-') {
-      // esta en un banco
-      this.dialog.open(MessageComponent, {
-        data: {
-          tipo: 'Aviso',
-          message: '<p>Ya estás en el banco ' + bancoUsuarioNombre + '.</p><p>Si quieres entrar en otro debes abandonarlo.</p>',
-          id: 'yaestas'
-        }
-      });
+      // ya esta en un banco
+      console.log("[gridwb] Ya estas en un banco")
+      this.avisoYaEstas(bancoUsuarioNombre);
     }
     // esta logueado y NO esta en ningun banco
     else {
       console.log('Logueado y en ningun banco. Autorizado para ' + bancoSolicitado);
       // peticion al servidor
-      const headers = {Authorization: 'Bearer my-token', 'My-Custom-Header': 'foobar'};
-      // console.log('Puerto: ' + bancoIDSolicitado.substr(2, bancoIDSolicitado.length));
+
       this._portBanco = bancoIDSolicitado.substr(2, bancoIDSolicitado.length);
       const _urlPeticion = 'http://' + this._express + ':' + this._portExpress +
         '/solicitud/?bancoid=' + bancoIDSolicitado +
@@ -67,44 +58,93 @@ export class GridwbComponent {
         '&avatar=' + this.miServAuth.getPhoto() +
         '&uid=' + this.miServAuth.getUID();
       console.log(_urlPeticion);
-      this.http.get<any>(_urlPeticion,
-        {headers}).subscribe(
+
+      // cabeceras de la peticion
+      const headers = new HttpHeaders()
+        .append('Content-Type', 'application/json')
+        .append('Access-Control-Allow-Headers', 'Content-Type')
+        .append('Access-Control-Allow-Methods', 'GET')
+        .append('Access-Control-Allow-Origin', '*');
+
+      this.http.get<any>(_urlPeticion, {headers}).subscribe(
         data => {
-          console.log('Respuesta express: ' + data.code + ', ' + data.puerto);
+          console.log('[gridwb] Respuesta express: ' + data.code + ', ' + data.puerto);
           // code = 0 es ejecución correcta
           if (data.code === 0){
-
-           /* this.dialog.open(MessageComponent, {
-              data: {
-                tipo: 'Info',
-                message:
-                // necesario para recargar la pagina
-                'Ya puedes entrar en <a href="gridwb">' + bancoSolicitado + '</a>',
-                id: 'puedes'
-              }
-            });*/
-            // reenviamos a mi nodered
+            // avisamos al usuario que va a tardar la carga de node-red
+           this.avisoEspera10sg();
           }
         },
         // error cuando el servidor intentó levantar el banco
         error => {
-          console.error('Error al levantar banco', error);
-          this.dialog.open(MessageComponent, {
-            data: {
-              tipo: 'Error',
-              message: 'Error al intentar lenvantar banco',
-              id: 'error'
-            }
-          });
+          console.error('[gridwb] Error al levantar banco', error);
+          this.avisoErrorLevantando();
         }
       );
     }
   }
 
   /**
-   * avisamos que se tiene que loguear
+   * Aviso ya estas en un banco
+   * @param bancoUsuarioNombre
+   * @private
    */
-  noLogueadoAviso() {
+  private avisoYaEstas(bancoUsuarioNombre) {
+    this.dialog.open(MessageComponent, {
+      data: {
+        tipo: 'Aviso',
+        message: '<p>Ya estás en el banco ' + bancoUsuarioNombre + '.</p><p>Si quieres entrar en otro debes abandonarlo.</p>',
+        id: 'yaestas'
+      }
+    });
+  }
+
+  /**
+   * Aviso de error al levantar el banco
+   * @private
+   */
+  private avisoErrorLevantando() {
+    this.dialog.open(MessageComponent, {
+      data: {
+        tipo: 'Error',
+        message: 'Error al intentar lenvantar banco',
+        id: 'error'
+      }
+    });
+  }
+
+  /**
+   * Aviso de espera de 10sg
+   * para que le de tiempo a levantar el node-red
+   * TODO esperar aviso de pm2 de que está levantado realmente
+   * @private
+   */
+  private avisoEspera10sg() {
+    console.log("[gridwb] esperando 10sg")
+    const timeout = 3000;
+    const dialogRef = this.dialog.open(MessageComponent, {
+      width: '300px',
+      data: {
+        tipo: 'Aviso',
+        message: 'Esto puede tardar unos 10sg...',
+        id: 'aviso'
+      }
+    })
+    dialogRef.afterOpened().subscribe(_ => {
+      setTimeout(() => {
+        // cerramos el dialogo a los 10sg
+        dialogRef.close();
+        // recargamos la pagina luego de esperar 10sg
+        location.reload()
+      }, timeout)
+    })
+
+  }
+
+  /**
+   * Aviso que se tiene que loguear
+   */
+  avisoNoLogueadoAviso() {
     this.dialog.open(MessageComponent, {
       data: {
         tipo: 'Aviso',

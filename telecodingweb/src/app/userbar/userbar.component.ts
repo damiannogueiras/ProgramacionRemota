@@ -28,23 +28,6 @@ export class UserbarComponent {
   }
 
   /**
-   * una vez creada la vista actualizamos datos
-   */
-  /*ngAfterViewChecked(): void {
-
-    this._user = this.miServDb.getUserByMail(this.miServAuth.getEmail());
-    this._wb = this.miServDb.getWbByMail(this.miServAuth.getEmail());
-    console.log('Userbar ');
-    console.log(this._wb);
-    this._nombreBanco = this._user.bancoNombre;
-    this._puerto = this._user.banco.substr(2, this._user.banco.length);
-    //this._keytopic = this._wb.userNodeRED;
-    this._status = this._wb.status;
-    this._t_remaining = this._wb.t_remaining;
-
-  }*/
-
-  /**
    * Salir del banco.
    * @param user registro
    */
@@ -63,5 +46,12 @@ export class UserbarComponent {
         console.error('Error al cerrar banco', error);
       }
     );
+  }
+
+  /**
+   * Obtener tiempo restante
+   */
+  tiempoRestante() {
+    return this.miServDb.getWbByMail(this.miServAuth.getEmail()).t_remaining
   }
 }

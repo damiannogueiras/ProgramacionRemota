@@ -33,12 +33,12 @@
 </div>
 
   <!-- Contenedor secundario -->
-    <!-- user bar -->
-    <div id="userbar" *ngIf="miServDb.isAtWB(miServAuth.getEmail());else grid">
+    <!-- Si estamos en un banco: userbar -->
+    <div id="userbar" *ngIf="isUserOnWB();else gridwb">
         <app-userbar></app-userbar>
     </div>
-    <!-- grid de workbenchs -->
-    <ng-template #grid>
+    <!-- Si no estamos en un banco me muestra el grid gridwb -->
+    <ng-template #gridwb>
     <div id="grid">
       <app-gridwb></app-gridwb>
     </div>

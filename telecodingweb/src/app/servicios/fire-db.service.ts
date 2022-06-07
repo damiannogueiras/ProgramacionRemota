@@ -1,5 +1,4 @@
-import {Injectable, OnInit} from '@angular/core';
-
+import {Injectable} from '@angular/core';
 // las clases para trabajar con bases de datos
 import {AngularFireDatabase, AngularFireList} from '@angular/fire/database';
 
@@ -10,6 +9,8 @@ import {switchMap} from 'rxjs/operators';
 import {IUsers} from '../interfaces/users';
 import {IWbs} from '../interfaces/wbs';
 import {IServers} from '../interfaces/servers';
+
+import { Input, OnChanges, SimpleChanges } from '@angular/core';
 
 
 @Injectable({
@@ -174,9 +175,7 @@ export class FireDBService {
         // console.log(this.workbenchsArray);
       }
     );
-    // console.log('Fin del constructor');
   } // fin del constructor
-
 
   /**
    * Crea entrada según la uid del usuario
@@ -285,5 +284,6 @@ export class FireDBService {
       return (this.getUserByMail(mail).banco !== '-');
     }
   }
+
 
 }
