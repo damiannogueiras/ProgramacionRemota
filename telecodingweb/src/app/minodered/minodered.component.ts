@@ -65,7 +65,7 @@ export class MinoderedComponent{
             //this.noderedReady = true;
           },
           (error) => {
-            // console.log('Error: ' + error.status);
+            console.log('[minodered] Error: ' + error.status);
             switch (error.status) {
               case 0:
                 this.noderedReady = false;

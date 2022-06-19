@@ -1,4 +1,5 @@
 <mat-tab-group animationDuration="500ms">
+
     <mat-tab>
       <ng-template mat-tab-label>
         <mat-icon class="tabicono" (click)="drawer.toggle()">vertical_split</mat-icon>
@@ -6,37 +7,58 @@
       </ng-template>
 
       <mat-drawer-container class="userbar-container" autosize>
-        <mat-drawer #drawer class="userbar-sidenav" mode="side">
-          <div *ngFor="let workbench of miServDb.workbenchs | async">
-            <div *ngIf="workbench.payload.val().userLogueado === miServAuth.getEmail()" class="telecoding-typography">
-              <p>Puerto : </p>
-              <p>keytopic : </p>
-              <p>tiempo restante :</p>
-              <p></p>
-            </div>
+        <mat-drawer #drawer class="userbar-sidenav" mode="side" opened="true">
+          <mat-card class="mat-elevation-z2 telecoding-typography">
+              <mat-card-header>
+                <div mat-card-avatar style="padding: 5px">
+                  <img mat-card-image width="50px" class="circular" src="{{miServDb.getWbByMail(this.miServAuth.getEmail()).avatar}}">
+                </div>
+                <mat-card-title class="mat-card-title">
+                  <span class="md-headline">{{miServDb.getWbByMail(this.miServAuth.getEmail()).nombre}}</span>
+                </mat-card-title>
+                <mat-card-subtitle><span class="md-headline">{{miServDb.getWbByMail(this.miServAuth.getEmail()).components}}</span></mat-card-subtitle>
+              </mat-card-header>
+              <mat-card-content>
+                <p [innerHTML]="miServDb.getWbByMail(this.miServAuth.getEmail()).descr"></p>
+                <p>Disponibiliad: {{miServDb.getWbByMail(this.miServAuth.getEmail()).t_remaining}}min</p>
+                <p>Unid. Didactica:
+                <a matTooltip="Unidad Didáctica" target=_blank href="{{miServDb.getWbByMail(this.miServAuth.getEmail()).UD}}">
+                  <mat-icon color="primary" role="img">description</mat-icon>
+                </a></p>
+              </mat-card-content>
+          </mat-card>
+          <div>
+            <p>Camara</p>
+            <iframe [src]="getURLcamera() | safe: 'resourceUrl'" width="320px" height="240px"></iframe>
+            <p>{{getURLcamera()}}<p>
           </div>
-          <button class="telecoding-typography" (click)="salir(miServDb.getUserByMail(miServAuth.getEmail()))" mat-raised-button>
-            <mat-icon>clear</mat-icon>Salir
-          </button>
+          <div>
+            <button class="telecoding-typography" (click)="salir(miServDb.getUserByMail(miServAuth.getEmail()))" mat-raised-button>
+              <mat-icon>clear</mat-icon>Salir del banco
+            </button>
+          </div>
         </mat-drawer>
 
         <div class="userbar-sidenav-content">
           <app-minodered></app-minodered>
         </div>
+
       </mat-drawer-container>
+
     </mat-tab>
+
     <mat-tab>
       <ng-template mat-tab-label>
         <mat-icon class="tabicono" (click)="drawerCam.toggle()">video_camera_back</mat-icon>
         <span>Mi Dashboard</span>
       </ng-template>
       <mat-drawer-container class="userbar-container" autosize>
-        <mat-drawer #drawerCam class="userbar-sidenav" mode="side">
-          <div *ngFor="let workbench of miServDb.workbenchs | async">
-            <div *ngIf="workbench.payload.val().userLogueado === miServAuth.getEmail()" class="telecoding-typography">
-              <p>Camara del workbench: URL</p>
+        <mat-drawer #drawerCam class="userbar-sidenav" mode="side" opened="true">
+              <div>
+                <p>Camara</p>
+                <iframe [src]="getURLcamera() | safe: 'resourceUrl'" width="320px" height="240px"></iframe>
+                <p>{{getURLcamera()}}<p>
             </div>
-          </div>
         </mat-drawer>
         <div class="userbar-sidenav-content">
           <app-dashboard></app-dashboard>

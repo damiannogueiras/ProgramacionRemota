@@ -1,0 +1,18 @@
+{
+  "workbenchs": {
+    "AA2105": {
+      "UD": "https://ottoszika.github.io/node-red-contrib-ewelink/#/nodes",
+      "avatar": "http://ssl.gstatic.com/docs/common/profile/rhino_lg.png",
+      "components": "sonoff",
+      "descr": "<p>Bsic sonoff use.</p><p>#sonoff #basic</p>",
+      "nombre": "Sonoff_Basic",
+      "photo": "https://firebasestorage.googleapis.com/v0/b/programacionremota.appspot.com/o/imagenes%2Fsonoff_basic.jpeg?alt=media&token=d08b119d-e48c-4553-af15-4f755e0a5a72",
+      "show": true,
+      "status": "free",
+      "t_remaining": 120,
+      "t_total": 120,
+      "userLogueado": "",
+      "userNodeRED": "kenobi"
+    }
+  }
+}

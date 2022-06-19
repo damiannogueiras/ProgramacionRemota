@@ -11,6 +11,7 @@ import {catchError, retry} from 'rxjs/operators';
 
 import {FireAuthService} from '../servicios/fire-auth.service';
 import {FireDBService} from '../servicios/fire-db.service';
+import {IWbs} from "../interfaces/wbs";
 
 @Component({
   selector: 'app-dashboard',
@@ -22,6 +23,9 @@ export class DashboardComponent {
   constructor(public miServDb: FireDBService,
               public miServAuth: FireAuthService) {}
 
+  /**
+   * Creamos la URL para el dashboard del node-red, es la URL/ui
+   */
   createURL() {
     // console.log("[dash] create url");
     let _URL = "";

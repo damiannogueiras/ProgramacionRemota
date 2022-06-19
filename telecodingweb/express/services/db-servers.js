@@ -1,7 +1,12 @@
 /**
  * Utilizamos la service account para entornos de servidores
  * https://console.cloud.google.com/iam-admin/serviceaccounts/details/112294775774598014073?authuser=0&project=programacionremota
+ *
+ * instalamos el SDK: npm install firebase-admin --save
+ *
  */
+
+
 var admin = require("firebase-admin");
 var serviceAccount = require("../environments/programacionremota-9f71ccbf2365.json");
 

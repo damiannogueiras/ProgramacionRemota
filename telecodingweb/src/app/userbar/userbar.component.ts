@@ -4,6 +4,7 @@ import { FireAuthService } from '../servicios/fire-auth.service';
 // comunicacion con el servidor express
 import {HttpClient} from '@angular/common/http';
 import {MatDialog} from '@angular/material/dialog';
+import {IWbs} from "../interfaces/wbs";
 
 @Component({
   selector: 'app-userbar',
@@ -28,23 +29,6 @@ export class UserbarComponent {
   }
 
   /**
-   * una vez creada la vista actualizamos datos
-   */
-  /*ngAfterViewChecked(): void {
-
-    this._user = this.miServDb.getUserByMail(this.miServAuth.getEmail());
-    this._wb = this.miServDb.getWbByMail(this.miServAuth.getEmail());
-    console.log('Userbar ');
-    console.log(this._wb);
-    this._nombreBanco = this._user.bancoNombre;
-    this._puerto = this._user.banco.substr(2, this._user.banco.length);
-    //this._keytopic = this._wb.userNodeRED;
-    this._status = this._wb.status;
-    this._t_remaining = this._wb.t_remaining;
-
-  }*/
-
-  /**
    * Salir del banco.
    * @param user registro
    */
@@ -63,5 +47,25 @@ export class UserbarComponent {
         console.error('Error al cerrar banco', error);
       }
     );
+    // recargamos la pagina para ir al home
+    window.location.reload()
+  }
+
+  /**
+   * Obtener tiempo restante
+   */
+  tiempoRestante() {
+    return this.miServDb.getWbByMail(this.miServAuth.getEmail()).t_remaining
+  }
+
+  /**
+   * URl de la camara
+   * @param WB
+   * @return URL camera
+   */
+  getURLcamera() {
+    let _url = this.miServDb.getWbByMail(this.miServAuth.getEmail()).camera + "/stream"
+    // console.log("[userbar] " + _url)
+    return _url
   }
 }
