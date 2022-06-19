@@ -152,7 +152,9 @@ function levantarNodeRED(bancoID, bancoNombre, uid, email, avatar) {
   let argsNodeRED = ' -p ' + puertoWB;
   // user home
   let userName = email.substr(0, email.indexOf('@'));
-  argsNodeRED = argsNodeRED + ' -u ' + _homeNodesRED + '/' + bancoID + '/users/' + userName;
+  argsNodeRED = argsNodeRED + ' --userDir ' + _homeNodesRED + '/' + bancoID + '/users/' + userName;
+  // node adittional
+  argsNodeRED = argsNodeRED + ' --nodesDir ' + _homeNodesRED + '/' + bancoID + '/node_modules';
   // fichero setting, contiene ruta de otros nodes y otros parametros
   argsNodeRED = argsNodeRED + ' -s ' + _homeNodesRED + '/' + bancoID + '/settings.js';
   // nodo inicial

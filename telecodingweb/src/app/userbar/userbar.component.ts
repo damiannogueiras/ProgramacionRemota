@@ -47,6 +47,8 @@ export class UserbarComponent {
         console.error('Error al cerrar banco', error);
       }
     );
+    // recargamos la pagina para ir al home
+    window.location.reload()
   }
 
   /**
