@@ -1,15 +1,16 @@
 /**
  * Utilizamos la service account para entornos de servidores
- * https://console.cloud.google.com/iam-admin/serviceaccounts/details/112294775774598014073?authuser=0&project=programacionremota
+ * https://firebase.google.com/docs/database/admin/start?hl=es#node.js_2
  */
 var admin = require("firebase-admin");
-var serviceAccount = require("../environments/programacionremota-9f71ccbf2365.json");
+var serviceAccount = require("../environments/service_account.json");
 
-// inicializamos la base de datos
-admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount),
-  databaseURL: "https://programacionremota.firebaseio.com"
-});
+// Configuracion de firebase con autenticacion de service account
+// https://console.cloud.google.com/iam-admin/serviceaccounts/details/112294775774598014073/keys?hl=es&project=programacionremota&supportedpurview=project
+const firebaseConfig = {
+  databaseURL: "https://programacionremota.firebaseio.com",
+  credential: admin.credential.cert(serviceAccount)
+};
 
 // Get a database reference
 var db = admin.database();
