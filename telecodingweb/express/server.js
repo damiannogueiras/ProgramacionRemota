@@ -1,6 +1,10 @@
 /**
  *    Server side Express
  *
+ *    Para arrancar el servidor
+ *    export NODE_OPTIONS=--openssl-legacy-provider
+ *    node express/server.js
+ *
  *    Ejecutarlo con nodemon para actualizar cambios automaticamente
  *    node ./node_modules/nodemon/bin/nodemon.js express/server.js
  */
