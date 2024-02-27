@@ -132,6 +132,7 @@ export class FireDBService {
       data => {
         this.serverArray = [];
         data.forEach(item => {
+          // @ts-ignore
           const a = item.payload.toJSON();
           // @ts-ignore
           a.$key = item.key;
@@ -148,6 +149,7 @@ export class FireDBService {
       data => {
         this.userArray = [];
         data.forEach(item => {
+          // @ts-ignore
           const a = item.payload.toJSON();
           // @ts-ignore
           a.$key = item.key;
@@ -164,8 +166,8 @@ export class FireDBService {
       data => {
         this.workbenchsArray = [];
         data.forEach(item => {
-          const a = item.payload.toJSON();
           // @ts-ignore
+          const a = item.payload.toJSON();
           a.$key = item.key;
           // console.log(item);
           // console.log(a);
