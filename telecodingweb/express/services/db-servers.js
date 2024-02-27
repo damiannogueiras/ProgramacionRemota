@@ -12,6 +12,8 @@ const firebaseConfig = {
   credential: admin.credential.cert(serviceAccount)
 };
 
+admin.initializeApp(firebaseConfig);
+
 // Get a database reference
 var db = admin.database();
 // ruta de los servers
