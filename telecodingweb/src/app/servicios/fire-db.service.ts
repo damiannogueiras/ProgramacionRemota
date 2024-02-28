@@ -168,6 +168,7 @@ export class FireDBService {
         data.forEach(item => {
           // @ts-ignore
           const a = item.payload.toJSON();
+          // @ts-ignore
           a.$key = item.key;
           // console.log(item);
           // console.log(a);
