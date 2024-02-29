@@ -64,4 +64,4 @@ Desde esta Base de Datos se obtiene la información del estado de los usuarios e
 
 ---
 
-Documentación en la [wiki](https://github.com/damiancastelao/ProgramacionRemota/wiki)
+Documentación técnica en la [wiki](https://github.com/damiannogueiras/ProgramacionRemota/wiki)
