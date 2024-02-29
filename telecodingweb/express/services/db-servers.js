@@ -12,6 +12,8 @@ const firebaseConfig = {
   credential: admin.credential.cert(serviceAccount)
 };
 
+// Initialize Firebase
+
 admin.initializeApp(firebaseConfig);
 
 // Get a database reference

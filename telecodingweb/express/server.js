@@ -22,7 +22,7 @@ const _port = 4100;
 const _portFirstNode = 2000;
 const NODORED_BANCOID = "AA2000";
 // TODO este dato varia segun el banco solicitado
-const _dominio = "192.168.1.250";
+const _dominio = "192.168.1.102";
 const _homeNodesRED = '/home/pi/ProgramacionRemota/node-red';
 // puerto del workbench
 var puertoWB = 0;
