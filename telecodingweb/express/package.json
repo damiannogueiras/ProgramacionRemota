@@ -1,0 +1,27 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "description": "backend programacion remota",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/damiannogueiras/ProgramacionRemota.git"
+  },
+  "author": "Damian Nogueiras",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/damiannogueiras/ProgramacionRemota/issues"
+  },
+  "homepage": "https://github.com/damiannogueiras/ProgramacionRemota#readme",
+  "dependencies": {
+    "compression": "^1.7.4",
+    "cors": "^2.8.5",
+    "express": "^4.18.2",
+    "firebase": "^10.8.0",
+    "firebase-admin": "^12.0.0"
+  }
+}

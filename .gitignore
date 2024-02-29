@@ -1,3 +1,4 @@
+package-lock.json
 serve*.orig
 telecoding/src/environments
 telecoding/angular.json
@@ -7,6 +8,8 @@ telecodingweb/express/probas.js
 telecodingweb/express/log
 telecodingweb/express/pid
 telecodingweb/express/frontend
+telecodingweb/express/node_modules
+telecoding/express/package-lock.json
 ProgramacionRemota.wiki/
 node-red/
 python/
