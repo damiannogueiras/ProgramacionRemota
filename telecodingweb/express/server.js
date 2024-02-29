@@ -1,7 +1,9 @@
 /**
  *    Server side Express
  *
- *    node server.js
+ *    Para arrancar el servidor
+ *    export NODE_OPTIONS=--openssl-legacy-provider
+ *    node express/server.js
  *
  *    Ejecutarlo con nodemon para actualizar cambios automaticamente
  *    node ./node_modules/nodemon/bin/nodemon.js express/server.js
@@ -9,7 +11,7 @@
 
 "use strict";
 // para servir app angular
-const _app_folder = '../dist/telecoding';
+// const _app_folder = '../dist/telecoding';
 // servidor express
 const express = require("express");
 const servidorExpress = express();
@@ -77,15 +79,15 @@ servidorExpress.listen(_port, "0.0.0.0", () => {
  * @param bancoID banco de trabajo, instancia de node-RED
  * @param bancoNombre nombre del banco de trabajo
  * @param uid del usuario que solicita
- * @email del usuario
- * @avatar del usuario
+ * @param email email del usuario
+ * @param avatar avatar del usuario
  */
 function levantarNodeRED(bancoID, bancoNombre, uid, email, avatar) {
   let nombreInstancia = "nombreInstancia";
   console.log("Levantando " + bancoID + " de " + email);
   let serverActual = getServerActual(bancoID);
   // comprobamos que no es un workbench, solo instancia nodered
-  if (bancoID == NODORED_BANCOID) {
+  if (bancoID === NODORED_BANCOID) {
     console.log("ES AA2000");
     // comprobamos que hay puertos libres
     if (db.getMaxInst(serverActual) > db.getNroInst(serverActual)) {
@@ -162,7 +164,7 @@ function stopNodeRED(UID, bancoID){
   // comprobamos que el usuario esta usando el banco
   // o es admin (el cronometro)
 
-  if(bancoID == db.getWBbyUID(UID) || UID === 'admin'){
+  if(bancoID === db.getWBbyUID(UID) || UID === 'admin'){
     // el que cierra es admin
     if (UID === 'admin') UID = db.getUIDbyWB(bancoID);
     console.log("UID:" + UID);

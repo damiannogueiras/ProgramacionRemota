@@ -3,6 +3,7 @@
 export interface IWbs {
   'UD': string;
   'avatar': string;
+  'camera': string;
   'components': string;
   'descr': string;
   'nombre': string;

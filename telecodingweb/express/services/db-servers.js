@@ -13,6 +13,7 @@ const firebaseConfig = {
 };
 
 // Initialize Firebase
+
 admin.initializeApp(firebaseConfig);
 
 // Get a database reference
